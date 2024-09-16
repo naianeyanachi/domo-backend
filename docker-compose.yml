@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  postgresdb:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=domo
+      - POSTGRES_PASSWORD=domo
+      - POSTGRES_DB=domo
+    ports:
+      - 5432:5432
+    volumes:
+      - db:/var/lib/postgres
+  app:
+    depends_on:
+      - postgresdb
+    build:
+      context: .
+    ports:
+      - 3000:3000
+    environment:
+      - DB_HOST=domo
+      - DB_USER=domo
+      - DB_PASSWORD=domo
+      - DB_NAME=domo
+      - DB_PORT=5432
+    volumes:
+      - ./src:/app/src
+
+volumes:
+  db:
