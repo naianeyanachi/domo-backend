@@ -1,13 +1,15 @@
-import { QueryInterface, DataTypes } from 'sequelize';
-import Migration from './migration';
-
-const migration: Migration = {
-  async up(queryInterface: QueryInterface, Sequelize: typeof DataTypes): Promise<void> {
+'use strict';
+/** @type {import('sequelize-cli').Migration} */
+module.exports = {
+  async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Citadels', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
+        type: Sequelize.INTEGER
+      },
+      id: {
         type: Sequelize.INTEGER
       },
       name: {
@@ -29,9 +31,7 @@ const migration: Migration = {
       }
     });
   },
-  async down(queryInterface: QueryInterface, Sequelize: typeof DataTypes): Promise<void> {
+  async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Citadels');
   }
 };
-
-export default migration;
