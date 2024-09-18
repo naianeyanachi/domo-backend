@@ -1,9 +1,18 @@
-import express from 'express';
+import express, { Express, Request, Response } from 'express';
+import bodyParser from 'body-parser'
+import citadel from './routes/citadel';
 
-const app = express();
-const port = 3000;
+const app: Express = express();
+const port: number = 3000;
 
-app.get('/', (req, res) => {
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+app.use(bodyParser.json());
+
+app.use('/api/citadels', citadel);
+
+app.get('/', (req: Request, res: Response) => {
     res.send('Hello, TypeScript + Node.js + Express!');
 });
 

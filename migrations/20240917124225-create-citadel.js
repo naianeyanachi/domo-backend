@@ -1,4 +1,7 @@
 'use strict';
+
+const { notEqual } = require('assert');
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -9,16 +12,17 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      id: {
-        type: Sequelize.INTEGER
-      },
       name: {
+        allowNull: false,
+        unique: true,
         type: Sequelize.STRING
       },
       resources: {
+        allowNull: false,
         type: Sequelize.INTEGER
       },
       materials: {
+        allowNull: false,
         type: Sequelize.INTEGER
       },
       createdAt: {
