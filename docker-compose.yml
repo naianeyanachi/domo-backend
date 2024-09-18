@@ -19,12 +19,6 @@ services:
       context: .
     ports:
       - 3000:3000
-    environment:
-      - DB_HOST=domo
-      - DB_USER=domo
-      - DB_PASSWORD=domo
-      - DB_NAME=domo
-      - DB_PORT=5432
     volumes:
       - ./src:/app/src
 
