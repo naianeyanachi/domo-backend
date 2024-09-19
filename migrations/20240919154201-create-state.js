@@ -1,29 +1,16 @@
 'use strict';
-
-const { notEqual } = require('assert');
-
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Citadel', {
+    await queryInterface.createTable('State', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
-        allowNull: false,
-        unique: true,
+      state: {
         type: Sequelize.STRING
-      },
-      resources: {
-        allowNull: false,
-        type: Sequelize.INTEGER
-      },
-      materials: {
-        allowNull: false,
-        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
@@ -36,6 +23,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Citadel');
+    await queryInterface.dropTable('State');
   }
 };

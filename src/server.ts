@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Express } from 'express';
 import bodyParser from 'body-parser'
 import citadel from './routes/citadel';
 
@@ -10,11 +10,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-app.use('/api/citadels', citadel);
-
-app.get('/', (req: Request, res: Response) => {
-    res.send('Hello, TypeScript + Node.js + Express!');
-});
+app.use('/api/citadel', citadel);
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);

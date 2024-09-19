@@ -1,29 +1,30 @@
 'use strict';
-
-const { notEqual } = require('assert');
-
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Citadel', {
-      id: {
+    await queryInterface.createTable('LevelCollector', {
+      level: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
+        type: Sequelize.INTEGER,
+      },
+      yield: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      timeToCollect: {
+        type: Sequelize.TIME,
+        allowNull: false,
+      },
+      upgradeResources: {
         type: Sequelize.INTEGER
       },
-      name: {
-        allowNull: false,
-        unique: true,
-        type: Sequelize.STRING
-      },
-      resources: {
-        allowNull: false,
+      upgradeMaterials: {
         type: Sequelize.INTEGER
       },
-      materials: {
-        allowNull: false,
-        type: Sequelize.INTEGER
+      timeToUpgrade: {
+        type: Sequelize.TIME
       },
       createdAt: {
         allowNull: false,
@@ -36,6 +37,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Citadel');
+    await queryInterface.dropTable('LevelCollector');
   }
 };

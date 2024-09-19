@@ -1,13 +1,6 @@
 import { Model, DataTypes, Sequelize } from 'sequelize';
 
-interface CitadelAttributes {
-  id?: number;
-  name: string;
-  resources?: number;
-  materials?: number;
-}
-
-class Citadel extends Model<CitadelAttributes> implements CitadelAttributes {
+class Citadel extends Model {
   public id?: number;
   public name!: string;
   public resources?: number;
@@ -44,6 +37,7 @@ export default (sequelize: Sequelize) => {
     {
       sequelize: sequelize,
       modelName: 'Citadel',
+      tableName: 'Citadel',
     }
   );
 

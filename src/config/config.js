@@ -8,6 +8,7 @@ module.exports = {
     port: process.env.DB_PORT,
     dialect: process.env.DB_DIALECT,
     logging: true,
+    seederStorage: "sequelize",
     define: {
       timestamps: true,
     },
@@ -20,6 +21,7 @@ module.exports = {
     port: process.env.DB_PORT,
     dialect: process.env.DB_DIALECT,
     logging: true,
+    seederStorage: "sequelize",
     define: {
       timestamps: true,
     },
@@ -31,6 +33,7 @@ module.exports = {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     dialect: process.env.DB_DIALECT,
+    seederStorage: "sequelize",
     define: {
       timestamps: true,
     },
