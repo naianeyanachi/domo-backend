@@ -5,7 +5,7 @@ const { now } = require('sequelize/lib/utils');
 module.exports = {
   async up(queryInterface, Sequelize) {
     const time = now()
-    await queryInterface.bulkInsert('RepairCollector', [
+    await queryInterface.bulkInsert('RepairFactory', [
       {
         level: 1,
         idStateFrom: 5,
@@ -50,7 +50,7 @@ module.exports = {
         level: 2,
         idStateFrom: 5,
         idStateTo: 4,
-        resources: 1,
+        resources: 2,
         materials: 0,
         timeToRepair: "00:00:04",
         createdAt: time,
@@ -60,7 +60,7 @@ module.exports = {
         level: 2,
         idStateFrom: 4,
         idStateTo: 3,
-        resources: 1,
+        resources: 2,
         materials: 0,
         timeToRepair: "00:00:04",
         createdAt: time,
@@ -70,7 +70,7 @@ module.exports = {
         level: 2,
         idStateFrom: 3,
         idStateTo: 2,
-        resources: 1,
+        resources: 2,
         materials: 0,
         timeToRepair: "00:00:04",
         createdAt: time,
@@ -80,7 +80,7 @@ module.exports = {
         level: 2,
         idStateFrom: 2,
         idStateTo: 1,
-        resources: 4,
+        resources: 10,
         materials: 0,
         timeToRepair: "00:00:04",
         createdAt: time,
@@ -90,7 +90,7 @@ module.exports = {
         level: 3,
         idStateFrom: 5,
         idStateTo: 4,
-        resources: 1,
+        resources: 3,
         materials: 0,
         timeToRepair: "00:00:03",
         createdAt: time,
@@ -100,7 +100,7 @@ module.exports = {
         level: 3,
         idStateFrom: 4,
         idStateTo: 3,
-        resources: 1,
+        resources: 3,
         materials: 0,
         timeToRepair: "00:00:03",
         createdAt: time,
@@ -110,7 +110,7 @@ module.exports = {
         level: 3,
         idStateFrom: 3,
         idStateTo: 2,
-        resources: 1,
+        resources: 3,
         materials: 0,
         timeToRepair: "00:00:03",
         createdAt: time,
@@ -120,7 +120,7 @@ module.exports = {
         level: 3,
         idStateFrom: 2,
         idStateTo: 1,
-        resources: 3,
+        resources: 15,
         materials: 0,
         timeToRepair: "00:00:03",
         createdAt: time,
@@ -130,6 +130,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    return queryInterface.bulkDelete('RepairCollector', null, {});
+    return queryInterface.bulkDelete('RepairFactory', null, {});
   }
 };
