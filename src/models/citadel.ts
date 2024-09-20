@@ -6,7 +6,10 @@ class Citadel extends Model {
   public resources?: number;
   public materials?: number;
 
-  public static associate(models: any): void { }
+  public static associate(models: any): void {
+    Citadel.hasOne(models.Factory, { sourceKey: 'id', foreignKey: 'idCitadel', as: 'factory' });
+    Citadel.hasOne(models.Collector, { sourceKey: 'id', foreignKey: 'idCitadel', as: 'collector' });
+  }
 }
 
 export default (sequelize: Sequelize) => {

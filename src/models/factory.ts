@@ -9,9 +9,9 @@ class Factory extends Model {
   public health!: number;
 
   static associate(models: any) {
-    Factory.belongsTo(models.Citadel, { foreignKey: 'idCitadel' });
-    Factory.belongsTo(models.State, { foreignKey: 'idState' });
-    Factory.belongsTo(models.LevelFactory, { foreignKey: 'level' });
+    Factory.belongsTo(models.Citadel, { foreignKey: 'idCitadel', targetKey: 'id' });
+    Factory.hasOne(models.State, { foreignKey: 'state', sourceKey: 'idState' });
+    Factory.hasOne(models.LevelFactory, { foreignKey: 'level', sourceKey: 'level' });
   }
 }
 

@@ -1,15 +1,16 @@
 import express, { Router, Request, Response } from 'express';
-import Citadel from '../models/citadel';
-import Collector from '../models/collector';
-import Factory from '../models/factory';
-import State from '../models/state';
 import db from '../models'
 
 const router: Router = express.Router();
 
 router.get('/:id', async (req: Request, res: Response) => {
   try {
-    const citadel = await Citadel(db.sequelize).findByPk(req.params.id);
+    const citadel = await db.Citadel.findByPk(req.params.id, {
+      include: [
+        { model: db.Collector, as: 'collector' },
+        { model: db.Factory, as: 'factory' },
+      ]
+    });
     if (!citadel) {
       return res.status(404).json({ message: 'Citadel not found' });
     }
@@ -22,15 +23,15 @@ router.get('/:id', async (req: Request, res: Response) => {
 
 router.post('/', async (req: Request, res: Response) => {
   try {
-    const newCitadel = await Citadel(db.sequelize).create(req.body);
-    const idleState = await State(db.sequelize).getOKState();
-    await Collector(db.sequelize).create({
+    const newCitadel = await db.Citadel.create(req.body);
+    const idleState = await db.State.getOKState();
+    await db.Collector.create({
       idCitadel: newCitadel.id,
       level: 1,
       idState: idleState.id,
       health: 100,
     })
-    await Factory(db.sequelize).create({
+    await db.Factory.create({
       idCitadel: newCitadel.id,
       level: 1,
       idState: idleState.id,

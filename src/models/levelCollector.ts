@@ -8,7 +8,9 @@ class LevelCollector extends Model {
   public upgradeResources!: number;
   public upgradeMaterials!: number;
 
-  static associate(models: any) { }
+  static associate(models: any) {
+    LevelCollector.hasMany(models.Collector, { sourceKey: 'level', foreignKey: 'level' })
+  }
 }
 
 export default (sequelize: Sequelize) => {

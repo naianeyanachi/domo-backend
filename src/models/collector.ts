@@ -9,9 +9,9 @@ class Collector extends Model {
   public health!: number;
 
   static associate(models: any) {
-    Collector.belongsTo(models.Citadel, { foreignKey: 'idCitadel' });
-    Collector.belongsTo(models.State, { foreignKey: 'idState' });
-    Collector.belongsTo(models.LevelCollector, { foreignKey: 'level' });
+    Collector.belongsTo(models.Citadel, { foreignKey: 'idCitadel', targetKey: 'id' });
+    Collector.hasOne(models.State, { foreignKey: 'state', sourceKey: 'idState' });
+    Collector.hasOne(models.LevelCollector, { foreignKey: 'level', sourceKey: 'level' });
   }
 }
 

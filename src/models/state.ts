@@ -5,7 +5,12 @@ class State extends Model {
   public id!: number;
   public state!: string;
 
-  static associate(models: any) { }
+  static associate(models: any) {
+    State.hasMany(models.RepairCollector, { foreignKey: 'idStateFrom', sourceKey: 'state' });
+    State.hasMany(models.RepairCollector, { foreignKey: 'idStateTo', sourceKey: 'state' });
+    State.hasMany(models.RepairFactory, { foreignKey: 'idStateFrom', sourceKey: 'state' });
+    State.hasMany(models.RepairFactory, { foreignKey: 'idStateTo', sourceKey: 'state' });
+  }
 
   static async getOKState(): Promise<State> {
     return await this.findOne({ where: { state: 'OK' } }) as State;

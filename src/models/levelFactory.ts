@@ -10,7 +10,7 @@ class LevelFactory extends Model {
   public timeToUpgrade!: string;
 
   static associate(models: any) {
-    // define association here
+    LevelFactory.hasMany(models.Factory, { sourceKey: 'level', foreignKey: 'level' })
   }
 }
 
