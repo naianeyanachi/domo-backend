@@ -1,14 +1,19 @@
 import { Model, DataTypes, Sequelize } from 'sequelize';
 
-class Citadel extends Model {
+export class Citadel extends Model {
   public id?: number;
   public name!: string;
-  public resources?: number;
-  public materials?: number;
+  public resources!: number;
+  public materials!: number;
 
   public static associate(models: any): void {
     Citadel.hasOne(models.Factory, { sourceKey: 'id', foreignKey: 'idCitadel', as: 'factory' });
     Citadel.hasOne(models.Collector, { sourceKey: 'id', foreignKey: 'idCitadel', as: 'collector' });
+  }
+
+  async addResources(resources: number) {
+    this.resources += resources;
+    await this.save();
   }
 }
 

@@ -11,6 +11,16 @@ class LevelCollector extends Model {
   static associate(models: any) {
     LevelCollector.hasMany(models.Collector, { sourceKey: 'level', foreignKey: 'level' })
   }
+
+  static async getYield(level: number) {
+    const levelCollector = await LevelCollector.findByPk(level);
+    return levelCollector!.yield;
+  }
+
+  static async getTimeToCollect(level: number) {
+    const levelCollector = await LevelCollector.findByPk(level);
+    return levelCollector!.timeToCollect;
+  }
 }
 
 export default (sequelize: Sequelize) => {

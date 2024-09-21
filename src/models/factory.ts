@@ -10,7 +10,7 @@ class Factory extends Model {
 
   static associate(models: any) {
     Factory.belongsTo(models.Citadel, { foreignKey: 'idCitadel', targetKey: 'id' });
-    Factory.hasOne(models.State, { foreignKey: 'state', sourceKey: 'idState' });
+    Factory.hasOne(models.State, { foreignKey: 'id', sourceKey: 'idState', as: 'state' });
     Factory.hasOne(models.LevelFactory, { foreignKey: 'level', sourceKey: 'level' });
   }
 }

@@ -8,8 +8,8 @@ class RepairCollector extends Model {
   public materials!: number;
 
   static associate(models: any) {
-    RepairCollector.hasOne(models.State, { foreignKey: 'state', sourceKey: 'idStateFrom' });
-    RepairCollector.hasOne(models.State, { foreignKey: 'state', sourceKey: 'idStateTo' });
+    RepairCollector.hasOne(models.State, { foreignKey: 'id', sourceKey: 'idStateFrom' });
+    RepairCollector.hasOne(models.State, { foreignKey: 'id', sourceKey: 'idStateTo' });
     RepairCollector.belongsTo(models.LevelCollector, { foreignKey: 'level' });
 
   }

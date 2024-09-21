@@ -10,8 +10,8 @@ class RepairFactory extends Model {
   public timeToRepair!: Date;
 
   static associate(models: any) {
-    RepairFactory.hasOne(models.State, { foreignKey: 'state', sourceKey: 'idStateFrom' });
-    RepairFactory.hasOne(models.State, { foreignKey: 'state', sourceKey: 'idStateTo' });
+    RepairFactory.hasOne(models.State, { foreignKey: 'id', sourceKey: 'idStateFrom' });
+    RepairFactory.hasOne(models.State, { foreignKey: 'id', sourceKey: 'idStateTo' });
     RepairFactory.belongsTo(models.LevelFactory, { foreignKey: 'level' });
   }
 }

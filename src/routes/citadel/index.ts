@@ -1,7 +1,9 @@
 import express, { Router, Request, Response } from 'express';
-import db from '../models'
+import db from '../../models'
+import collector from './collector'
 
 const router: Router = express.Router();
+router.use('/:id/collector', collector);
 
 router.get('/:id', async (req: Request, res: Response) => {
   try {
