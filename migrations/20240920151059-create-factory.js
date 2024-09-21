@@ -29,7 +29,7 @@ module.exports = {
         },
       },
       finishTime: {
-        type: Sequelize.TIME
+        type: Sequelize.DATE
       },
       health: {
         type: Sequelize.INTEGER,

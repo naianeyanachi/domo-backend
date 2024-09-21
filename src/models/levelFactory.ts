@@ -12,6 +12,16 @@ class LevelFactory extends Model {
   static associate(models: any) {
     LevelFactory.hasMany(models.Factory, { sourceKey: 'level', foreignKey: 'level' })
   }
+
+  static async getYield(level: number) {
+    const levelCollector = await LevelFactory.findByPk(level);
+    return levelCollector!.yield;
+  }
+
+  static async getTimeToManufactor(level: number) {
+    const levelFactory = await LevelFactory.findByPk(level);
+    return levelFactory!.timeToManufactor;
+  }
 }
 
 export default (sequelize: Sequelize) => {

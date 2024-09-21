@@ -15,6 +15,11 @@ export class Citadel extends Model {
     this.resources += resources;
     await this.save();
   }
+
+  async addMaterials(materials: number) {
+    this.materials += materials;
+    await this.save();
+  }
 }
 
 export default (sequelize: Sequelize) => {

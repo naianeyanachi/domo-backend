@@ -10,29 +10,29 @@ router.get('/', async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Citadel not found' });
     }
 
-    let collector = await db.Collector.findOne({
+    let factory = await db.Factory.findOne({
       where: { idCitadel: parseInt(citadel.id) },
       include: [{ model: db.State, as: 'state' }]
     });
 
-    if (!collector) {
+    if (!factory) {
       const idleState = await db.State.getOKState();
-      await db.Collector.create({
+      await db.Factory.create({
         idCitadel: citadel.id,
         level: 1,
         idState: idleState.id,
         health: 100,
       })
-      collector = await db.Collector.findOne({
+      factory = await db.Factory.findOne({
         where: { idCitadel: citadel.id },
         include: [{ model: db.State, as: 'state' }]
       });
     }
 
-    res.json(collector);
+    res.json(factory);
   } catch (error) {
-    console.error('Error fetching collector:', error);
-    res.status(500).json({ message: 'Failed to fetch collector', error: 'An error occurred' });
+    console.error('Error fetching factory:', error);
+    res.status(500).json({ message: 'Failed to fetch factory', error: 'An error occurred' });
   }
 });
 
@@ -43,20 +43,20 @@ router.post('/start', async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Citadel not found' });
     }
 
-    let collector = await db.Collector.findOne({
+    let factory = await db.Factory.findOne({
       where: { idCitadel: parseInt(citadel.id) },
       include: [{ model: db.State, as: 'state' }]
     });
 
-    if (!collector) {
+    if (!factory) {
       const idleState = await db.State.getOKState();
-      await db.Collector.create({
+      await db.Factory.create({
         idCitadel: citadel.id,
         level: 1,
         idState: idleState.id,
         health: 100,
       })
-      collector = await db.Collector.findOne({
+      factory = await db.Factory.findOne({
         where: { idCitadel: citadel.id },
         include: [
           { model: db.State, as: 'state' },
@@ -65,8 +65,8 @@ router.post('/start', async (req: Request, res: Response) => {
       });
     }
 
-    await collector.collect(db, citadel)
-    await collector.start(db, citadel)
+    await factory.manufacture(db, citadel)
+    await factory.start(db, citadel)
     const updatedCitadel = await db.Citadel.findByPk(req.params.id, {
       include: [
         { model: db.Collector, as: 'collector' },
@@ -77,11 +77,11 @@ router.post('/start', async (req: Request, res: Response) => {
     return res.json(updatedCitadel);
 
   } catch (error: unknown) {
-    console.error('Error starting collector:', error);
+    console.error('Error starting factory:', error);
     if (error instanceof Error) {
-      res.status(400).json({ message: 'Failed to start collector', error: error.message });
+      res.status(400).json({ message: 'Failed to start factory', error: error.message });
     } else {
-      res.status(400).json({ message: 'Failed to start collector', error: 'An unknown error occurred' });
+      res.status(400).json({ message: 'Failed to start factory', error: 'An unknown error occurred' });
     }
   }
 });

@@ -6,7 +6,7 @@ class Collector extends Model {
   public idCitadel!: number;
   public idState!: number;
   public level!: number;
-  public finishTime?: Date;
+  public finishTime!: Date | null;
   public health!: number;
 
   static associate(models: any) {
@@ -20,7 +20,7 @@ class Collector extends Model {
       return;
     }
     if (this.finishTime < new Date()) {
-      this.finishTime = undefined
+      this.finishTime = null
       await this.save()
       const yieldCollector = await db.LevelCollector.getYield(this.level)
       await citadel.addResources(yieldCollector)
