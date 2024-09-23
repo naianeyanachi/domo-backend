@@ -1,11 +1,12 @@
 import express, { Router, Request, Response } from 'express';
 import db from '../../../models';
+import { start } from './start';
 
 const router: Router = express.Router({ mergeParams: true });
 
 router.get('/', async (req: Request, res: Response) => {
   try {
-    const citadel = await db.Citadel.findByPk(req.params.id);
+    const citadel = await db.Citadel.getCitadel(db, req.params.id)
     if (!citadel) {
       return res.status(404).json({ message: 'Citadel not found' });
     }
@@ -38,43 +39,6 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
-router.post('/start', async (req: Request, res: Response) => {
-  try {
-    const citadel = await db.Citadel.findByPk(req.params.id, {
-      include: [{ model: db.Factory, as: 'factory' }]
-    });
-    if (!citadel) {
-      return res.status(404).json({ message: 'Citadel not found' });
-    }
-
-    await citadel.updateCitadel(db);
-
-    const factory = citadel.factory;
-    await factory.start(db, citadel);
-
-    const updatedCitadel = await db.Citadel.findByPk(req.params.id, {
-      include: [
-        { model: db.Collector, as: 'collector' },
-        { model: db.Factory, as: 'factory' }
-      ]
-    });
-
-    return res.json(updatedCitadel);
-  } catch (error: unknown) {
-    console.error('Error starting factory:', error);
-    if (error instanceof Error) {
-      res
-        .status(400)
-        .json({ message: 'Failed to start factory', error: error.message });
-    } else {
-      res
-        .status(400)
-        .json({
-          message: 'Failed to start factory',
-          error: 'An unknown error occurred'
-        });
-    }
-  }
-});
+router.post('/start', start);
 
 export default router;

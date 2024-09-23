@@ -1,7 +1,6 @@
 import { Model, DataTypes, Sequelize } from 'sequelize';
 import { Collector } from './collector';
 import { Factory } from './factory';
-import { throws } from 'assert';
 
 export class Citadel extends Model {
   public id?: number;
@@ -21,6 +20,15 @@ export class Citadel extends Model {
       sourceKey: 'id',
       foreignKey: 'idCitadel',
       as: 'collector'
+    });
+  }
+
+  public static async getCitadel(db: any, id: number) {
+    return await db.Citadel.findByPk(id, {
+      include: [
+        { model: db.Collector, as: 'collector' },
+        { model: db.Factory, as: 'factory' }
+      ]
     });
   }
 

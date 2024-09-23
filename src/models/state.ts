@@ -27,6 +27,14 @@ class State extends Model {
   static async getOKState(): Promise<State> {
     return (await this.findOne({ where: { state: 'OK' } })) as State;
   }
+
+  static async getRepairState(): Promise<State> {
+    return (await this.findOne({ where: { state: 'REPAIRING' } })) as State;
+  }
+
+  static async getUpgradeState(): Promise<State> {
+    return (await this.findOne({ where: { state: 'UPGRADING' } })) as State;
+  }
 }
 
 export default (sequelize: Sequelize) => {
