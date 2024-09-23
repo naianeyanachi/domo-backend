@@ -26,8 +26,24 @@ export class Citadel extends Model {
   public static async getCitadel(db: any, id: number) {
     return await db.Citadel.findByPk(id, {
       include: [
-        { model: db.Collector, as: 'collector' },
-        { model: db.Factory, as: 'factory' }
+        {
+          model: db.Collector,
+          as: 'collector',
+          include: [
+            { model: db.State, as: 'state' },
+            { model: db.LevelCollector, as: 'levelCollector' },
+            { model: db.Citadel, as: 'citadel' }
+          ]
+        },
+        {
+          model: db.Factory,
+          as: 'factory',
+          include: [
+            { model: db.State, as: 'state' },
+            { model: db.LevelFactory, as: 'levelFactory' },
+            { model: db.Citadel, as: 'citadel' }
+          ]
+        }
       ]
     });
   }
@@ -43,8 +59,8 @@ export class Citadel extends Model {
   }
 
   async updateCitadel(db: any) {
-    await this.collector?.collect(db, this);
-    await this.factory?.manufacture(db, this);
+    await this.collector?.updateCollector(db);
+    await this.factory?.updateFactory(db);
   }
 }
 

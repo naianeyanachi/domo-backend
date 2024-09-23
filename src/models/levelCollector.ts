@@ -1,7 +1,7 @@
 'use strict';
 import { Model, DataTypes, Sequelize } from 'sequelize';
 
-class LevelCollector extends Model {
+export class LevelCollector extends Model {
   public level!: number;
   public yield!: number;
   public timeToCollect!: string;

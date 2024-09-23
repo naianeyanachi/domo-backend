@@ -1,7 +1,7 @@
 'use strict';
 import { Model, DataTypes, Sequelize } from 'sequelize';
 
-class State extends Model {
+export class State extends Model {
   public id!: number;
   public state!: string;
 
@@ -28,12 +28,32 @@ class State extends Model {
     return (await this.findOne({ where: { state: 'OK' } })) as State;
   }
 
-  static async getRepairState(): Promise<State> {
+  static async getRepairingState(): Promise<State> {
     return (await this.findOne({ where: { state: 'REPAIRING' } })) as State;
   }
 
-  static async getUpgradeState(): Promise<State> {
+  static async getUpgradingState(): Promise<State> {
     return (await this.findOne({ where: { state: 'UPGRADING' } })) as State;
+  }
+
+  static async getCollectingState(): Promise<State> {
+    return (await this.findOne({ where: { state: 'COLLECTING' } })) as State;
+  }
+
+  static async getManufacturingState(): Promise<State> {
+    return (await this.findOne({ where: { state: 'MANUFACTURING' } })) as State;
+  }
+
+  canRepair(): boolean {
+    return this.state === 'WORN' || this.state === 'DAMAGED' || this.state === 'DESTROYED';
+  }
+
+  canUpgrade(): boolean {
+    return this.state === 'OK' || this.state === 'REINFORCED';
+  }
+
+  canCollect(): boolean {
+    return this.state === 'OK' || this.state === 'REINFORCED';
   }
 }
 

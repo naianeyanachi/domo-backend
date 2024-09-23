@@ -20,6 +20,13 @@ module.exports = {
           key: 'id'
         }
       },
+      idNextState: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'State',
+          key: 'id'
+        }
+      },
       level: {
         type: Sequelize.INTEGER,
         allowNull: false,

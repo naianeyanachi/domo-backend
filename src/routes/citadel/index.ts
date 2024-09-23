@@ -7,23 +7,13 @@ const router: Router = express.Router();
 
 router.get('/:id', async (req: Request, res: Response) => {
   try {
-    const citadel = await db.Citadel.findByPk(req.params.id, {
-      include: [
-        { model: db.Collector, as: 'collector' },
-        { model: db.Factory, as: 'factory' }
-      ]
-    });
+    const citadel = await db.Citadel.getCitadel(db, req.params.id)
     if (!citadel) {
       return res.status(404).json({ message: 'Citadel not found' });
     }
 
     await citadel.updateCitadel(db);
-    const updatedCitadel = await db.Citadel.findByPk(req.params.id, {
-      include: [
-        { model: db.Collector, as: 'collector' },
-        { model: db.Factory, as: 'factory' }
-      ]
-    });
+    const updatedCitadel = await db.Citadel.getCitadel(db, req.params.id)
 
     res.json(updatedCitadel);
   } catch (error) {
@@ -53,7 +43,8 @@ router.post('/', async (req: Request, res: Response) => {
       idState: idleState.id,
       health: 100
     });
-    res.status(201).json(newCitadel);
+    const citadel = await db.Citadel.getCitadel(db, newCitadel.id)
+    res.status(201).json(citadel);
   } catch (error: unknown) {
     console.error('Error creating citadel:', error);
     if (error instanceof Error) {

@@ -10,6 +10,7 @@ module.exports = {
       [
         {
           level: 1,
+          resources: 1,
           yield: 1,
           timeToManufactor: '00:00:15',
           upgradeResources: 5,
@@ -20,6 +21,7 @@ module.exports = {
         },
         {
           level: 2,
+          resources: 4,
           yield: 5,
           timeToManufactor: '00:01:00',
           upgradeResources: 25,
@@ -30,8 +32,12 @@ module.exports = {
         },
         {
           level: 3,
+          resources: 150,
           yield: 200,
           timeToManufactor: '00:05:00',
+          upgradeResources: 50,
+          upgradeMaterials: 5,
+          timeToUpgrade: '00:05:00',
           createdAt: time,
           updatedAt: time
         }

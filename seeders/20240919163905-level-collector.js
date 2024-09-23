@@ -32,6 +32,9 @@ module.exports = {
           level: 3,
           yield: 200,
           timeToCollect: '00:05:00',
+          upgradeResources: 50,
+          upgradeMaterials: 5,
+          timeToUpgrade: '00:05:00',
           createdAt: time,
           updatedAt: time
         }

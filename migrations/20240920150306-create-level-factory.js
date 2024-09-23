@@ -8,6 +8,10 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      resources: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
       yield: {
         type: Sequelize.INTEGER,
         allowNull: false

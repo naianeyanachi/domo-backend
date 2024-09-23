@@ -1,8 +1,9 @@
 'use strict';
 import { Model, DataTypes, Sequelize } from 'sequelize';
 
-class LevelFactory extends Model {
+export class LevelFactory extends Model {
   public level!: number;
+  public resources!: number;
   public yield!: number;
   public timeToManufactor!: string;
   public upgradeResources!: number;
@@ -34,6 +35,10 @@ export default (sequelize: Sequelize) => {
         type: DataTypes.INTEGER,
         allowNull: false,
         primaryKey: true
+      },
+      resources: {
+        type: DataTypes.INTEGER,
+        allowNull: false
       },
       yield: {
         type: DataTypes.INTEGER,

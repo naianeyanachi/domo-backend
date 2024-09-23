@@ -1,6 +1,6 @@
 import express, { Router, Request, Response } from 'express';
 import db from '../../../models';
-import { start } from './start';
+import { manufacture } from './manufacture';
 
 const router: Router = express.Router({ mergeParams: true });
 
@@ -39,6 +39,6 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
-router.post('/start', start);
+router.post('/manufacture', manufacture);
 
 export default router;

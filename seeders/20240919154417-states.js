@@ -43,6 +43,16 @@ module.exports = {
           state: 'REPAIRING',
           createdAt: time,
           updatedAt: time
+        },
+        {
+          state: 'COLLECTING',
+          createdAt: time,
+          updatedAt: time
+        },
+        {
+          state: 'MANUFACTURING',
+          createdAt: time,
+          updatedAt: time
         }
       ],
       {}

@@ -51,7 +51,7 @@ module.exports = {
         }
       },
       {
-        primaryKey: ['level', 'idStateFrom', 'idStateTo']
+        primaryKey: ['level', 'idStateFrom']
       }
     );
   },

@@ -2,10 +2,12 @@
 import { Model, DataTypes, Sequelize } from 'sequelize';
 
 class RepairCollector extends Model {
+  public level!: number;
   public idStateFrom!: number;
   public idStateTo!: number;
   public resources!: number;
   public materials!: number;
+  public timeToRepair!: string;
 
   static associate(models: any) {
     RepairCollector.hasOne(models.State, {
@@ -17,6 +19,10 @@ class RepairCollector extends Model {
       sourceKey: 'idStateTo'
     });
     RepairCollector.belongsTo(models.LevelCollector, { foreignKey: 'level' });
+  }
+
+  static async getRepair(level: number, idStateFrom: number) {
+    return await RepairCollector.findOne({ where: { level, idStateFrom } });
   }
 }
 
