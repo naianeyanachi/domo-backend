@@ -3,6 +3,7 @@ import { Model, DataTypes, Sequelize } from 'sequelize';
 import { Citadel } from './citadel';
 import { State } from './state';
 import { LevelCollector } from './levelCollector';
+import { RepairCollector } from './repairCollector';
 
 export class Collector extends Model {
   public idCitadel!: number;
@@ -13,6 +14,7 @@ export class Collector extends Model {
   public health!: number;
   public state?: State;
   public levelCollector?: LevelCollector;
+  public repairCollector?: RepairCollector;
   public citadel?: Citadel;
 
   static associate(models: any) {
@@ -30,6 +32,11 @@ export class Collector extends Model {
       foreignKey: 'level',
       sourceKey: 'level',
       as: 'levelCollector'
+    });
+    Collector.hasOne(models.RepairCollector, {
+      foreignKey: 'idStateFrom',
+      sourceKey: 'idState',
+      as: 'repairCollector'
     });
   }
 
@@ -66,21 +73,30 @@ export class Collector extends Model {
   }
 
   async repair(db: any) {
-    const repairState = await db.State.getRepairState();
+    const repairState = await db.State.getRepairingState();
     if (this.idState == repairState.id) {
       throw new Error('Collector is already repairing');
     }
     if (!this.state?.canRepair()) {
-      throw new Error('Collector can\'t be repaired');
+      throw new Error('Collector cannot be repaired');
+    }
+    if (this.citadel!.resources < this.repairCollector!.resources) {
+      throw new Error('Not enough resources to repair');
+    }
+    if (this.citadel!.materials < this.repairCollector!.materials) {
+      throw new Error('Not enough materials to repair');
     }
 
-    const repair = await db.RepairCollector.getRepair(this.level);
-    const timeToRepair = repair!.timeToRepair;
+    this.citadel!.resources -= this.repairCollector!.resources;
+    this.citadel!.materials -= this.repairCollector!.materials;
+    await this.citadel!.save();
+
+    const timeToRepair = this.repairCollector!.timeToRepair;
     const [hours, minutes, seconds] = timeToRepair.split(':').map(Number);
     const milliseconds = (hours * 3600 + minutes * 60 + seconds) * 1000;
     this.finishTime = new Date(Date.now() + milliseconds);
     this.idState = repairState.id;
-    this.idNextState = repair.idStateTo;
+    this.idNextState = this.repairCollector!.idStateTo;
 
     await this.save();
   }

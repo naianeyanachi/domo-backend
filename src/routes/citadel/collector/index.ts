@@ -1,6 +1,7 @@
 import express, { Router, Request, Response } from 'express';
 import db from '../../../models';
 import { collect } from './collect';
+import { repair } from './repair';
 
 const router: Router = express.Router({ mergeParams: true });
 
@@ -40,5 +41,7 @@ router.get('/', async (req: Request, res: Response) => {
 });
 
 router.post('/collect', collect);
+router.post('/repair', repair);
+
 
 export default router;

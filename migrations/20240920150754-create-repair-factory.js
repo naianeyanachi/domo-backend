@@ -7,6 +7,7 @@ module.exports = {
       {
         level: {
           type: Sequelize.INTEGER,
+          primaryKey: true,
           allowNull: false,
           references: {
             model: 'LevelFactory',
@@ -15,6 +16,7 @@ module.exports = {
         },
         idStateFrom: {
           type: Sequelize.INTEGER,
+          primaryKey: true,
           allowNull: false,
           references: {
             model: 'State',
@@ -50,9 +52,7 @@ module.exports = {
           type: Sequelize.DATE
         }
       },
-      {
-        primaryKey: ['level', 'idStateFrom']
-      }
+      {}
     );
   },
   async down(queryInterface, Sequelize) {

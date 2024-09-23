@@ -9,12 +9,9 @@ export const manufacture = async (req: Request, res: Response) => {
     }
 
     await citadel.updateCitadel(db);
-
-    const factory = citadel.factory;
-    await factory.manufacture(db);
+    await citadel.factory.manufacture(db);
 
     const updatedCitadel = await db.Citadel.getCitadel(db, req.params.id)
-
     return res.json(updatedCitadel);
   } catch (error: unknown) {
     console.error('Error starting factory:', error);

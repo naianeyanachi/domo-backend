@@ -9,12 +9,9 @@ export const repair = async (req: Request, res: Response) => {
     }
 
     await citadel.updateCitadel(db);
-
-    const collector = citadel.collector;
-    await collector.repair(db);
+    await citadel.collector.repair(db);
 
     const updatedCitadel = await db.Citadel.getCitadel(db, req.params.id)
-
     return res.json(updatedCitadel);
   } catch (error: unknown) {
     console.error('Error repairing collector:', error);

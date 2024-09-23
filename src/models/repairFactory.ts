@@ -1,13 +1,13 @@
 'use strict';
 import { Model, DataTypes, Sequelize } from 'sequelize';
 
-class RepairFactory extends Model {
+export class RepairFactory extends Model {
   public level!: number;
   public idStateFrom!: number;
   public idStateTo!: number;
   public resources!: number;
   public materials!: number;
-  public timeToRepair!: Date;
+  public timeToRepair!: string;
 
   static associate(models: any) {
     RepairFactory.hasOne(models.State, {
@@ -27,11 +27,13 @@ export default (sequelize: Sequelize) => {
     {
       level: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        primaryKey: true,
       },
       idStateFrom: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        primaryKey: true,
       },
       idStateTo: {
         type: DataTypes.INTEGER,

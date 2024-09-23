@@ -32,7 +32,8 @@ export class Citadel extends Model {
           include: [
             { model: db.State, as: 'state' },
             { model: db.LevelCollector, as: 'levelCollector' },
-            { model: db.Citadel, as: 'citadel' }
+            { model: db.Citadel, as: 'citadel' },
+            { model: db.RepairCollector, as: 'repairCollector', required: false }
           ]
         },
         {
@@ -41,7 +42,8 @@ export class Citadel extends Model {
           include: [
             { model: db.State, as: 'state' },
             { model: db.LevelFactory, as: 'levelFactory' },
-            { model: db.Citadel, as: 'citadel' }
+            { model: db.Citadel, as: 'citadel' },
+            { model: db.RepairFactory, as: 'repairFactory', required: false }
           ]
         }
       ]

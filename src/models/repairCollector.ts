@@ -1,7 +1,7 @@
 'use strict';
 import { Model, DataTypes, Sequelize } from 'sequelize';
 
-class RepairCollector extends Model {
+export class RepairCollector extends Model {
   public level!: number;
   public idStateFrom!: number;
   public idStateTo!: number;
@@ -20,10 +20,6 @@ class RepairCollector extends Model {
     });
     RepairCollector.belongsTo(models.LevelCollector, { foreignKey: 'level' });
   }
-
-  static async getRepair(level: number, idStateFrom: number) {
-    return await RepairCollector.findOne({ where: { level, idStateFrom } });
-  }
 }
 
 export default (sequelize: Sequelize) => {
@@ -31,11 +27,13 @@ export default (sequelize: Sequelize) => {
     {
       level: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        primaryKey: true,
       },
       idStateFrom: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        primaryKey: true,
       },
       idStateTo: {
         type: DataTypes.INTEGER,

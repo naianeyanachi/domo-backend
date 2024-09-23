@@ -3,6 +3,7 @@ import { Model, DataTypes, Sequelize } from 'sequelize';
 import { Citadel } from './citadel';
 import { State } from './state';
 import { LevelFactory } from './levelFactory';
+import { RepairFactory } from './repairFactory';
 
 export class Factory extends Model {
   public idCitadel!: number;
@@ -14,6 +15,7 @@ export class Factory extends Model {
   public state?: State;
   public levelFactory?: LevelFactory;
   public citadel?: Citadel;
+  public repairFactory?: RepairFactory;
 
   static associate(models: any) {
     Factory.belongsTo(models.Citadel, {
@@ -30,6 +32,11 @@ export class Factory extends Model {
       foreignKey: 'level',
       sourceKey: 'level',
       as: 'levelFactory'
+    });
+    Factory.hasOne(models.RepairFactory, {
+      foreignKey: 'idStateFrom',
+      sourceKey: 'idState',
+      as: 'repairFactory'
     });
   }
 
@@ -68,6 +75,35 @@ export class Factory extends Model {
     this.idNextState = this.idState;
     const manufacturingState = await db.State.getManufacturingState();
     this.idState = manufacturingState.id;
+
+    await this.save();
+  }
+
+  async repair(db: any) {
+    const repairState = await db.State.getRepairingState();
+    if (this.idState == repairState.id) {
+      throw new Error('Factory is already repairing');
+    }
+    if (!this.state?.canRepair()) {
+      throw new Error('Factory cannot be repaired');
+    }
+    if (this.citadel!.resources < this.repairFactory!.resources) {
+      throw new Error('Not enough resources to repair');
+    }
+    if (this.citadel!.materials < this.repairFactory!.materials) {
+      throw new Error('Not enough materials to repair');
+    }
+
+    this.citadel!.resources -= this.repairFactory!.resources;
+    this.citadel!.materials -= this.repairFactory!.materials;
+    await this.citadel!.save();
+
+    const timeToRepair = this.repairFactory!.timeToRepair;
+    const [hours, minutes, seconds] = timeToRepair.split(':').map(Number);
+    const milliseconds = (hours * 3600 + minutes * 60 + seconds) * 1000;
+    this.finishTime = new Date(Date.now() + milliseconds);
+    this.idState = repairState.id;
+    this.idNextState = this.repairFactory!.idStateTo;
 
     await this.save();
   }
