@@ -9,7 +9,10 @@ class LevelCollector extends Model {
   public upgradeMaterials!: number;
 
   static associate(models: any) {
-    LevelCollector.hasMany(models.Collector, { sourceKey: 'level', foreignKey: 'level' })
+    LevelCollector.hasMany(models.Collector, {
+      sourceKey: 'level',
+      foreignKey: 'level'
+    });
   }
 
   static async getYield(level: number) {
@@ -24,36 +27,39 @@ class LevelCollector extends Model {
 }
 
 export default (sequelize: Sequelize) => {
-  LevelCollector.init({
-    level: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      primaryKey: true,
+  LevelCollector.init(
+    {
+      level: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        primaryKey: true
+      },
+      yield: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      },
+      timeToCollect: {
+        type: DataTypes.TIME,
+        allowNull: false
+      },
+      upgradeResources: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      },
+      upgradeMaterials: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      },
+      timeToUpgrade: {
+        type: DataTypes.TIME
+      }
     },
-    yield: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },
-    timeToCollect: {
-      type: DataTypes.TIME,
-      allowNull: false
-    },
-    upgradeResources: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },
-    upgradeMaterials: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },
-    timeToUpgrade: {
-      type: DataTypes.TIME
-    },
-  }, {
-    sequelize,
-    modelName: 'LevelCollector',
-    tableName: 'LevelCollector',
-  });
+    {
+      sequelize,
+      modelName: 'LevelCollector',
+      tableName: 'LevelCollector'
+    }
+  );
 
   return LevelCollector;
 };

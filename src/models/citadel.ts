@@ -1,14 +1,26 @@
 import { Model, DataTypes, Sequelize } from 'sequelize';
+import { Collector } from './collector';
+import { Factory } from './factory';
 
 export class Citadel extends Model {
   public id?: number;
   public name!: string;
   public resources!: number;
   public materials!: number;
+  public collector?: Collector;
+  public factory?: Factory;
 
   public static associate(models: any): void {
-    Citadel.hasOne(models.Factory, { sourceKey: 'id', foreignKey: 'idCitadel', as: 'factory' });
-    Citadel.hasOne(models.Collector, { sourceKey: 'id', foreignKey: 'idCitadel', as: 'collector' });
+    Citadel.hasOne(models.Factory, {
+      sourceKey: 'id',
+      foreignKey: 'idCitadel',
+      as: 'factory'
+    });
+    Citadel.hasOne(models.Collector, {
+      sourceKey: 'id',
+      foreignKey: 'idCitadel',
+      as: 'collector'
+    });
   }
 
   async addResources(resources: number) {
@@ -29,28 +41,28 @@ export default (sequelize: Sequelize) => {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
-        allowNull: false,
+        allowNull: false
       },
       name: {
         type: DataTypes.STRING,
         unique: true,
-        allowNull: false,
+        allowNull: false
       },
       resources: {
         type: DataTypes.INTEGER,
         defaultValue: 0,
-        allowNull: false,
+        allowNull: false
       },
       materials: {
         type: DataTypes.INTEGER,
         defaultValue: 0,
-        allowNull: false,
-      },
+        allowNull: false
+      }
     },
     {
       sequelize: sequelize,
       modelName: 'Citadel',
-      tableName: 'Citadel',
+      tableName: 'Citadel'
     }
   );
 

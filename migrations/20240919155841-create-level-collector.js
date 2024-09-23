@@ -6,15 +6,15 @@ module.exports = {
       level: {
         allowNull: false,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       },
       yield: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: false
       },
       timeToCollect: {
         type: Sequelize.TIME,
-        allowNull: false,
+        allowNull: false
       },
       upgradeResources: {
         type: Sequelize.INTEGER

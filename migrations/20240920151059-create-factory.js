@@ -10,7 +10,7 @@ module.exports = {
         references: {
           model: 'Citadel',
           key: 'id'
-        },
+        }
       },
       idState: {
         type: Sequelize.INTEGER,
@@ -18,7 +18,7 @@ module.exports = {
         references: {
           model: 'State',
           key: 'id'
-        },
+        }
       },
       level: {
         type: Sequelize.INTEGER,
@@ -26,14 +26,14 @@ module.exports = {
         references: {
           model: 'LevelFactory',
           key: 'level'
-        },
+        }
       },
       finishTime: {
         type: Sequelize.DATE
       },
       health: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

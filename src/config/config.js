@@ -8,10 +8,10 @@ module.exports = {
     port: process.env.DB_PORT,
     dialect: process.env.DB_DIALECT,
     logging: true,
-    seederStorage: "sequelize",
+    seederStorage: 'sequelize',
     define: {
-      timestamps: true,
-    },
+      timestamps: true
+    }
   },
   test: {
     username: process.env.DB_USER,
@@ -21,10 +21,10 @@ module.exports = {
     port: process.env.DB_PORT,
     dialect: process.env.DB_DIALECT,
     logging: true,
-    seederStorage: "sequelize",
+    seederStorage: 'sequelize',
     define: {
-      timestamps: true,
-    },
+      timestamps: true
+    }
   },
   production: {
     username: process.env.DB_USER,
@@ -33,9 +33,9 @@ module.exports = {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     dialect: process.env.DB_DIALECT,
-    seederStorage: "sequelize",
+    seederStorage: 'sequelize',
     define: {
-      timestamps: true,
-    },
+      timestamps: true
+    }
   }
 };

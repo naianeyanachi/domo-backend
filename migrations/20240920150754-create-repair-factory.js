@@ -2,7 +2,8 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('RepairFactory',
+    await queryInterface.createTable(
+      'RepairFactory',
       {
         level: {
           type: Sequelize.INTEGER,
@@ -10,7 +11,7 @@ module.exports = {
           references: {
             model: 'LevelFactory',
             key: 'level'
-          },
+          }
         },
         idStateFrom: {
           type: Sequelize.INTEGER,
@@ -18,7 +19,7 @@ module.exports = {
           references: {
             model: 'State',
             key: 'id'
-          },
+          }
         },
         idStateTo: {
           type: Sequelize.INTEGER,
@@ -26,19 +27,19 @@ module.exports = {
           references: {
             model: 'State',
             key: 'id'
-          },
+          }
         },
         resources: {
           type: Sequelize.INTEGER,
-          allowNull: false,
+          allowNull: false
         },
         materials: {
           type: Sequelize.INTEGER,
-          allowNull: false,
+          allowNull: false
         },
         timeToRepair: {
           type: Sequelize.TIME,
-          allowNull: false,
+          allowNull: false
         },
         createdAt: {
           allowNull: false,
@@ -51,7 +52,7 @@ module.exports = {
       },
       {
         primaryKey: ['level', 'idStateFrom', 'idStateTo']
-      },
+      }
     );
   },
   async down(queryInterface, Sequelize) {
