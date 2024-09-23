@@ -17,17 +17,14 @@ router.get('/:id', async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Citadel not found' });
     }
 
-    const factory = citadel.factory;
-    await factory.manufacture(db, citadel);
-    const collector = citadel.collector;
-    await collector.collect(db, citadel);
-
+    await citadel.updateCitadel(db);
     const updatedCitadel = await db.Citadel.findByPk(req.params.id, {
       include: [
         { model: db.Collector, as: 'collector' },
         { model: db.Factory, as: 'factory' }
       ]
     });
+
     res.json(updatedCitadel);
   } catch (error) {
     console.error('Error fetching citadel:', error);

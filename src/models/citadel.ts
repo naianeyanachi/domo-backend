@@ -1,6 +1,7 @@
 import { Model, DataTypes, Sequelize } from 'sequelize';
 import { Collector } from './collector';
 import { Factory } from './factory';
+import { throws } from 'assert';
 
 export class Citadel extends Model {
   public id?: number;
@@ -31,6 +32,11 @@ export class Citadel extends Model {
   async addMaterials(materials: number) {
     this.materials += materials;
     await this.save();
+  }
+
+  async updateCitadel(db: any) {
+    await this.collector?.collect(db, this);
+    await this.factory?.manufacture(db, this);
   }
 }
 

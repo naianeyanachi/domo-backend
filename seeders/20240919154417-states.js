@@ -33,6 +33,16 @@ module.exports = {
           state: 'DESTROYED',
           createdAt: time,
           updatedAt: time
+        },
+        {
+          state: 'UPGRADING',
+          createdAt: time,
+          updatedAt: time
+        },
+        {
+          state: 'REPAIRING',
+          createdAt: time,
+          updatedAt: time
         }
       ],
       {}

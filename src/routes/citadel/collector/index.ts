@@ -47,27 +47,11 @@ router.post('/start', async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Citadel not found' });
     }
 
-    let collector = citadel.collector;
+    await citadel.updateCitadel(db);
 
-    if (!collector) {
-      const idleState = await db.State.getOKState();
-      await db.Collector.create({
-        idCitadel: citadel.id,
-        level: 1,
-        idState: idleState.id,
-        health: 100
-      });
-      collector = await db.Collector.findOne({
-        where: { idCitadel: citadel.id },
-        include: [
-          { model: db.State, as: 'state' },
-          { model: db.Citadel, as: 'citadel' }
-        ]
-      });
-    }
-
-    await collector.collect(db, citadel);
+    const collector = citadel.collector;
     await collector.start(db, citadel);
+
     const updatedCitadel = await db.Citadel.findByPk(req.params.id, {
       include: [
         { model: db.Collector, as: 'collector' },
