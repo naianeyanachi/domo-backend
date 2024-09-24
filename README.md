@@ -22,4 +22,3 @@ O servidor estará rodando na porta 3000.
 ```bash
 make migrate
 ```
-

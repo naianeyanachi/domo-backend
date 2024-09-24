@@ -1,28 +1,28 @@
-'use strict';
-import { Model, DataTypes, Sequelize } from 'sequelize';
+'use strict'
+import { Model, DataTypes, Sequelize } from 'sequelize'
 
 export class LevelCollector extends Model {
-  public level!: number;
-  public yield!: number;
-  public timeToCollect!: string;
-  public upgradeResources!: number;
-  public upgradeMaterials!: number;
+  public level!: number
+  public yield!: number
+  public timeToCollect!: string
+  public upgradeResources!: number
+  public upgradeMaterials!: number
 
   static associate(models: any) {
     LevelCollector.hasMany(models.Collector, {
       sourceKey: 'level',
-      foreignKey: 'level'
-    });
+      foreignKey: 'level',
+    })
   }
 
   static async getYield(level: number) {
-    const levelCollector = await LevelCollector.findByPk(level);
-    return levelCollector!.yield;
+    const levelCollector = await LevelCollector.findByPk(level)
+    return levelCollector!.yield
   }
 
   static async getTimeToCollect(level: number) {
-    const levelCollector = await LevelCollector.findByPk(level);
-    return levelCollector!.timeToCollect;
+    const levelCollector = await LevelCollector.findByPk(level)
+    return levelCollector!.timeToCollect
   }
 }
 
@@ -32,34 +32,34 @@ export default (sequelize: Sequelize) => {
       level: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        primaryKey: true
+        primaryKey: true,
       },
       yield: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       timeToCollect: {
         type: DataTypes.TIME,
-        allowNull: false
+        allowNull: false,
       },
       upgradeResources: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       upgradeMaterials: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       timeToUpgrade: {
-        type: DataTypes.TIME
-      }
+        type: DataTypes.TIME,
+      },
     },
     {
       sequelize,
       modelName: 'LevelCollector',
-      tableName: 'LevelCollector'
+      tableName: 'LevelCollector',
     }
-  );
+  )
 
-  return LevelCollector;
-};
+  return LevelCollector
+}

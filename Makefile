@@ -10,3 +10,6 @@ seed:
 
 seed-undo:
 	npx sequelize-cli db:seed:undo:all
+
+lint:
+	npm run format

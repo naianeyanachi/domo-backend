@@ -1,59 +1,63 @@
-'use strict';
-import { Model, DataTypes, Sequelize } from 'sequelize';
+'use strict'
+import { Model, DataTypes, Sequelize } from 'sequelize'
 
 export class State extends Model {
-  public id!: number;
-  public state!: string;
+  public id!: number
+  public state!: string
 
   static associate(models: any) {
     State.hasMany(models.RepairCollector, {
       foreignKey: 'idStateFrom',
-      sourceKey: 'id'
-    });
+      sourceKey: 'id',
+    })
     State.hasMany(models.RepairCollector, {
       foreignKey: 'idStateTo',
-      sourceKey: 'id'
-    });
+      sourceKey: 'id',
+    })
     State.hasMany(models.RepairFactory, {
       foreignKey: 'idStateFrom',
-      sourceKey: 'id'
-    });
+      sourceKey: 'id',
+    })
     State.hasMany(models.RepairFactory, {
       foreignKey: 'idStateTo',
-      sourceKey: 'id'
-    });
+      sourceKey: 'id',
+    })
   }
 
   static async getOKState(): Promise<State> {
-    return (await this.findOne({ where: { state: 'OK' } })) as State;
+    return (await this.findOne({ where: { state: 'OK' } })) as State
   }
 
   static async getRepairingState(): Promise<State> {
-    return (await this.findOne({ where: { state: 'REPAIRING' } })) as State;
+    return (await this.findOne({ where: { state: 'REPAIRING' } })) as State
   }
 
   static async getUpgradingState(): Promise<State> {
-    return (await this.findOne({ where: { state: 'UPGRADING' } })) as State;
+    return (await this.findOne({ where: { state: 'UPGRADING' } })) as State
   }
 
   static async getCollectingState(): Promise<State> {
-    return (await this.findOne({ where: { state: 'COLLECTING' } })) as State;
+    return (await this.findOne({ where: { state: 'COLLECTING' } })) as State
   }
 
   static async getManufacturingState(): Promise<State> {
-    return (await this.findOne({ where: { state: 'MANUFACTURING' } })) as State;
+    return (await this.findOne({ where: { state: 'MANUFACTURING' } })) as State
   }
 
   canRepair(): boolean {
-    return this.state === 'WORN' || this.state === 'DAMAGED' || this.state === 'DESTROYED';
+    return (
+      this.state === 'WORN' ||
+      this.state === 'DAMAGED' ||
+      this.state === 'DESTROYED'
+    )
   }
 
   canUpgrade(): boolean {
-    return this.state === 'OK' || this.state === 'REINFORCED';
+    return this.state === 'OK' || this.state === 'REINFORCED'
   }
 
   canCollect(): boolean {
-    return this.state === 'OK' || this.state === 'REINFORCED';
+    return this.state === 'OK' || this.state === 'REINFORCED'
   }
 }
 
@@ -64,19 +68,19 @@ export default (sequelize: Sequelize) => {
         type: DataTypes.INTEGER,
         allowNull: false,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
       state: {
         type: DataTypes.STRING,
-        allowNull: false
-      }
+        allowNull: false,
+      },
     },
     {
       sequelize,
       modelName: 'State',
-      tableName: 'State'
+      tableName: 'State',
     }
-  );
+  )
 
-  return State;
-};
+  return State
+}

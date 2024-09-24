@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -11,8 +11,8 @@ module.exports = {
           allowNull: false,
           references: {
             model: 'LevelCollector',
-            key: 'level'
-          }
+            key: 'level',
+          },
         },
         idStateFrom: {
           type: Sequelize.INTEGER,
@@ -20,42 +20,42 @@ module.exports = {
           allowNull: false,
           references: {
             model: 'State',
-            key: 'id'
-          }
+            key: 'id',
+          },
         },
         idStateTo: {
           type: Sequelize.INTEGER,
           allowNull: false,
           references: {
             model: 'State',
-            key: 'id'
-          }
+            key: 'id',
+          },
         },
         resources: {
           type: Sequelize.INTEGER,
-          allowNull: false
+          allowNull: false,
         },
         materials: {
           type: Sequelize.INTEGER,
-          allowNull: false
+          allowNull: false,
         },
         timeToRepair: {
           type: Sequelize.TIME,
-          allowNull: false
+          allowNull: false,
         },
         createdAt: {
           allowNull: false,
-          type: Sequelize.DATE
+          type: Sequelize.DATE,
         },
         updatedAt: {
           allowNull: false,
-          type: Sequelize.DATE
-        }
+          type: Sequelize.DATE,
+        },
       },
       {}
-    );
+    )
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('RepairCollector');
-  }
-};
+    await queryInterface.dropTable('RepairCollector')
+  },
+}

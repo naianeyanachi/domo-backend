@@ -1,47 +1,44 @@
-import express, { Router, Request, Response } from 'express';
-import db from '../../../models';
-import { collect } from './collect';
-import { repair } from './repair';
+import express, { Router, Request, Response } from 'express'
+import db from '../../../models'
+import { collect } from './collect'
+import { repair } from './repair'
 
-const router: Router = express.Router({ mergeParams: true });
+const router: Router = express.Router({ mergeParams: true })
 
 router.get('/', async (req: Request, res: Response) => {
   try {
-    const citadel = await db.Citadel.getCitadel(db, req.params.id);
+    const citadel = await db.Citadel.getCitadel(db, req.params.id)
     if (!citadel) {
-      return res.status(404).json({ message: 'Citadel not found' });
+      return res.status(404).json({ message: 'Citadel not found' })
     }
 
-    let collector = citadel.collector;
+    let collector = citadel.collector
 
     if (!collector) {
-      const idleState = await db.State.getOKState();
+      const idleState = await db.State.getOKState()
       await db.Collector.create({
         idCitadel: citadel.id,
         level: 1,
         idState: idleState.id,
-        health: 100
-      });
+        health: 100,
+      })
       collector = await db.Collector.findOne({
         where: { idCitadel: citadel.id },
-        include: [{ model: db.State, as: 'state' }]
-      });
+        include: [{ model: db.State, as: 'state' }],
+      })
     }
 
-    res.json(collector);
+    res.json(collector)
   } catch (error) {
-    console.error('Error fetching collector:', error);
-    res
-      .status(500)
-      .json({
-        message: 'Failed to fetch collector',
-        error: 'An error occurred'
-      });
+    console.error('Error fetching collector:', error)
+    res.status(500).json({
+      message: 'Failed to fetch collector',
+      error: 'An error occurred',
+    })
   }
-});
+})
 
-router.post('/collect', collect);
-router.post('/repair', repair);
+router.post('/collect', collect)
+router.post('/repair', repair)
 
-
-export default router;
+export default router

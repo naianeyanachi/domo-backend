@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -9,50 +9,50 @@ module.exports = {
         allowNull: false,
         references: {
           model: 'Citadel',
-          key: 'id'
-        }
+          key: 'id',
+        },
       },
       idState: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: 'State',
-          key: 'id'
-        }
+          key: 'id',
+        },
       },
       idNextState: {
         type: Sequelize.INTEGER,
         references: {
           model: 'State',
-          key: 'id'
-        }
+          key: 'id',
+        },
       },
       level: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: 'LevelCollector',
-          key: 'level'
-        }
+          key: 'level',
+        },
       },
       finishTime: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       health: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
-    });
+        type: Sequelize.DATE,
+      },
+    })
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Collector');
-  }
-};
+    await queryInterface.dropTable('Collector')
+  },
+}

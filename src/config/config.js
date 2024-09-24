@@ -1,4 +1,4 @@
-require('dotenv').config({ path: __dirname + '/../../.env' });
+require('dotenv').config({ path: __dirname + '/../../.env' })
 module.exports = {
   development: {
     username: process.env.DB_USER,
@@ -10,8 +10,8 @@ module.exports = {
     logging: true,
     seederStorage: 'sequelize',
     define: {
-      timestamps: true
-    }
+      timestamps: true,
+    },
   },
   test: {
     username: process.env.DB_USER,
@@ -23,8 +23,8 @@ module.exports = {
     logging: true,
     seederStorage: 'sequelize',
     define: {
-      timestamps: true
-    }
+      timestamps: true,
+    },
   },
   production: {
     username: process.env.DB_USER,
@@ -35,7 +35,7 @@ module.exports = {
     dialect: process.env.DB_DIALECT,
     seederStorage: 'sequelize',
     define: {
-      timestamps: true
-    }
-  }
-};
+      timestamps: true,
+    },
+  },
+}

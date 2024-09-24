@@ -1,10 +1,10 @@
-'use strict';
-const { now } = require('sequelize/lib/utils');
+'use strict'
+const { now } = require('sequelize/lib/utils')
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    const time = now();
+    const time = now()
     await queryInterface.bulkInsert(
       'RepairFactory',
       [
@@ -16,7 +16,7 @@ module.exports = {
           materials: 0,
           timeToRepair: '00:00:05',
           createdAt: time,
-          updatedAt: time
+          updatedAt: time,
         },
         {
           level: 1,
@@ -26,7 +26,7 @@ module.exports = {
           materials: 0,
           timeToRepair: '00:00:05',
           createdAt: time,
-          updatedAt: time
+          updatedAt: time,
         },
         {
           level: 1,
@@ -36,7 +36,7 @@ module.exports = {
           materials: 0,
           timeToRepair: '00:00:05',
           createdAt: time,
-          updatedAt: time
+          updatedAt: time,
         },
         {
           level: 1,
@@ -46,7 +46,7 @@ module.exports = {
           materials: 0,
           timeToRepair: '00:00:05',
           createdAt: time,
-          updatedAt: time
+          updatedAt: time,
         },
         {
           level: 2,
@@ -56,7 +56,7 @@ module.exports = {
           materials: 0,
           timeToRepair: '00:00:04',
           createdAt: time,
-          updatedAt: time
+          updatedAt: time,
         },
         {
           level: 2,
@@ -66,7 +66,7 @@ module.exports = {
           materials: 0,
           timeToRepair: '00:00:04',
           createdAt: time,
-          updatedAt: time
+          updatedAt: time,
         },
         {
           level: 2,
@@ -76,7 +76,7 @@ module.exports = {
           materials: 0,
           timeToRepair: '00:00:04',
           createdAt: time,
-          updatedAt: time
+          updatedAt: time,
         },
         {
           level: 2,
@@ -86,7 +86,7 @@ module.exports = {
           materials: 0,
           timeToRepair: '00:00:04',
           createdAt: time,
-          updatedAt: time
+          updatedAt: time,
         },
         {
           level: 3,
@@ -96,7 +96,7 @@ module.exports = {
           materials: 0,
           timeToRepair: '00:00:03',
           createdAt: time,
-          updatedAt: time
+          updatedAt: time,
         },
         {
           level: 3,
@@ -106,7 +106,7 @@ module.exports = {
           materials: 0,
           timeToRepair: '00:00:03',
           createdAt: time,
-          updatedAt: time
+          updatedAt: time,
         },
         {
           level: 3,
@@ -116,7 +116,7 @@ module.exports = {
           materials: 0,
           timeToRepair: '00:00:03',
           createdAt: time,
-          updatedAt: time
+          updatedAt: time,
         },
         {
           level: 3,
@@ -126,14 +126,14 @@ module.exports = {
           materials: 0,
           timeToRepair: '00:00:03',
           createdAt: time,
-          updatedAt: time
-        }
+          updatedAt: time,
+        },
       ],
       {}
-    );
+    )
   },
 
   async down(queryInterface, Sequelize) {
-    return queryInterface.bulkDelete('RepairFactory', null, {});
-  }
-};
+    return queryInterface.bulkDelete('RepairFactory', null, {})
+  },
+}

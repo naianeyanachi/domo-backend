@@ -1,24 +1,24 @@
-'use strict';
-import { Model, DataTypes, Sequelize } from 'sequelize';
+'use strict'
+import { Model, DataTypes, Sequelize } from 'sequelize'
 
 export class RepairCollector extends Model {
-  public level!: number;
-  public idStateFrom!: number;
-  public idStateTo!: number;
-  public resources!: number;
-  public materials!: number;
-  public timeToRepair!: string;
+  public level!: number
+  public idStateFrom!: number
+  public idStateTo!: number
+  public resources!: number
+  public materials!: number
+  public timeToRepair!: string
 
   static associate(models: any) {
     RepairCollector.hasOne(models.State, {
       foreignKey: 'id',
-      sourceKey: 'idStateFrom'
-    });
+      sourceKey: 'idStateFrom',
+    })
     RepairCollector.hasOne(models.State, {
       foreignKey: 'id',
-      sourceKey: 'idStateTo'
-    });
-    RepairCollector.belongsTo(models.LevelCollector, { foreignKey: 'level' });
+      sourceKey: 'idStateTo',
+    })
+    RepairCollector.belongsTo(models.LevelCollector, { foreignKey: 'level' })
   }
 }
 
@@ -37,27 +37,27 @@ export default (sequelize: Sequelize) => {
       },
       idStateTo: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       resources: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       materials: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       timeToRepair: {
         type: DataTypes.TIME,
-        allowNull: false
-      }
+        allowNull: false,
+      },
     },
     {
       sequelize,
       modelName: 'RepairCollector',
-      tableName: 'RepairCollector'
+      tableName: 'RepairCollector',
     }
-  );
+  )
 
-  return RepairCollector;
-};
+  return RepairCollector
+}

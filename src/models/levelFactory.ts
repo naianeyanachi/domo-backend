@@ -1,30 +1,30 @@
-'use strict';
-import { Model, DataTypes, Sequelize } from 'sequelize';
+'use strict'
+import { Model, DataTypes, Sequelize } from 'sequelize'
 
 export class LevelFactory extends Model {
-  public level!: number;
-  public resources!: number;
-  public yield!: number;
-  public timeToManufactor!: string;
-  public upgradeResources!: number;
-  public upgradeMaterials!: number;
-  public timeToUpgrade!: string;
+  public level!: number
+  public resources!: number
+  public yield!: number
+  public timeToManufactor!: string
+  public upgradeResources!: number
+  public upgradeMaterials!: number
+  public timeToUpgrade!: string
 
   static associate(models: any) {
     LevelFactory.hasMany(models.Factory, {
       sourceKey: 'level',
-      foreignKey: 'level'
-    });
+      foreignKey: 'level',
+    })
   }
 
   static async getYield(level: number) {
-    const levelCollector = await LevelFactory.findByPk(level);
-    return levelCollector!.yield;
+    const levelCollector = await LevelFactory.findByPk(level)
+    return levelCollector!.yield
   }
 
   static async getTimeToManufactor(level: number) {
-    const levelFactory = await LevelFactory.findByPk(level);
-    return levelFactory!.timeToManufactor;
+    const levelFactory = await LevelFactory.findByPk(level)
+    return levelFactory!.timeToManufactor
   }
 }
 
@@ -34,39 +34,39 @@ export default (sequelize: Sequelize) => {
       level: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        primaryKey: true
+        primaryKey: true,
       },
       resources: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       yield: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       timeToManufactor: {
         type: DataTypes.TIME,
-        allowNull: false
+        allowNull: false,
       },
       upgradeResources: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       upgradeMaterials: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       timeToUpgrade: {
         type: DataTypes.TIME,
-        allowNull: false
-      }
+        allowNull: false,
+      },
     },
     {
       sequelize,
       modelName: 'LevelFactory',
-      tableName: 'LevelFactory'
+      tableName: 'LevelFactory',
     }
-  );
+  )
 
-  return LevelFactory;
-};
+  return LevelFactory
+}

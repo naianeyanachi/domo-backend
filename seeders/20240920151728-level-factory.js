@@ -1,10 +1,10 @@
-'use strict';
-const { now } = require('sequelize/lib/utils');
+'use strict'
+const { now } = require('sequelize/lib/utils')
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    const time = now();
+    const time = now()
     await queryInterface.bulkInsert(
       'LevelFactory',
       [
@@ -17,7 +17,7 @@ module.exports = {
           upgradeMaterials: 0,
           timeToUpgrade: '00:00:15',
           createdAt: time,
-          updatedAt: time
+          updatedAt: time,
         },
         {
           level: 2,
@@ -28,7 +28,7 @@ module.exports = {
           upgradeMaterials: 0,
           timeToUpgrade: '00:01:30',
           createdAt: time,
-          updatedAt: time
+          updatedAt: time,
         },
         {
           level: 3,
@@ -39,14 +39,14 @@ module.exports = {
           upgradeMaterials: 5,
           timeToUpgrade: '00:05:00',
           createdAt: time,
-          updatedAt: time
-        }
+          updatedAt: time,
+        },
       ],
       {}
-    );
+    )
   },
 
   async down(queryInterface, Sequelize) {
-    return queryInterface.bulkDelete('LevelFactory', null, {});
-  }
-};
+    return queryInterface.bulkDelete('LevelFactory', null, {})
+  },
+}

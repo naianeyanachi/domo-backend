@@ -1,24 +1,24 @@
-'use strict';
-import { Model, DataTypes, Sequelize } from 'sequelize';
+'use strict'
+import { Model, DataTypes, Sequelize } from 'sequelize'
 
 export class RepairFactory extends Model {
-  public level!: number;
-  public idStateFrom!: number;
-  public idStateTo!: number;
-  public resources!: number;
-  public materials!: number;
-  public timeToRepair!: string;
+  public level!: number
+  public idStateFrom!: number
+  public idStateTo!: number
+  public resources!: number
+  public materials!: number
+  public timeToRepair!: string
 
   static associate(models: any) {
     RepairFactory.hasOne(models.State, {
       foreignKey: 'id',
-      sourceKey: 'idStateFrom'
-    });
+      sourceKey: 'idStateFrom',
+    })
     RepairFactory.hasOne(models.State, {
       foreignKey: 'id',
-      sourceKey: 'idStateTo'
-    });
-    RepairFactory.belongsTo(models.LevelFactory, { foreignKey: 'level' });
+      sourceKey: 'idStateTo',
+    })
+    RepairFactory.belongsTo(models.LevelFactory, { foreignKey: 'level' })
   }
 }
 
@@ -37,27 +37,27 @@ export default (sequelize: Sequelize) => {
       },
       idStateTo: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       resources: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       materials: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       timeToRepair: {
         type: DataTypes.TIME,
-        allowNull: false
-      }
+        allowNull: false,
+      },
     },
     {
       sequelize,
       modelName: 'RepairFactory',
-      tableName: 'RepairFactory'
+      tableName: 'RepairFactory',
     }
-  );
+  )
 
-  return RepairFactory;
-};
+  return RepairFactory
+}
