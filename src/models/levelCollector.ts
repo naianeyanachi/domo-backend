@@ -7,6 +7,7 @@ export class LevelCollector extends Model {
   public timeToCollect!: string
   public upgradeResources!: number
   public upgradeMaterials!: number
+  public timeToUpgrade!: string
 
   static associate(models: any) {
     LevelCollector.hasMany(models.Collector, {
