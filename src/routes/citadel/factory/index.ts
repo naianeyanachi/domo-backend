@@ -2,6 +2,7 @@ import express, { Router, Request, Response } from 'express'
 import db from '../../../models'
 import { manufacture } from './manufacture'
 import { repair } from './repair'
+import { upgrade } from './upgrade'
 
 const router: Router = express.Router({ mergeParams: true })
 
@@ -12,10 +13,8 @@ router.get('/', async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Citadel not found' })
     }
 
-    let factory = await db.Factory.findOne({
-      where: { idCitadel: parseInt(citadel.id) },
-      include: [{ model: db.State, as: 'state' }],
-    })
+    await citadel.updateCitadel(db)
+    let factory = citadel.factory
 
     if (!factory) {
       const idleState = await db.State.getOKState()
@@ -42,5 +41,6 @@ router.get('/', async (req: Request, res: Response) => {
 
 router.post('/manufacture', manufacture)
 router.post('/repair', repair)
+router.post('/upgrade', upgrade)
 
 export default router

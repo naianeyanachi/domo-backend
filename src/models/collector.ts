@@ -48,6 +48,8 @@ export class Collector extends Model {
       if (this.idState == (await db.State.getCollectingState()).id) {
         const yieldCollector = this.levelCollector!.yield
         await this.citadel!.addResources(yieldCollector)
+      } else if (this.idState == (await db.State.getUpgradingState()).id) {
+        this.level += 1
       }
 
       this.finishTime = null
@@ -73,10 +75,6 @@ export class Collector extends Model {
   }
 
   async repair(db: any) {
-    const repairState = await db.State.getRepairingState()
-    if (this.idState == repairState.id) {
-      throw new Error('Collector is already repairing')
-    }
     if (!this.state?.canRepair()) {
       throw new Error('Collector cannot be repaired')
     }
@@ -95,8 +93,35 @@ export class Collector extends Model {
     const [hours, minutes, seconds] = timeToRepair.split(':').map(Number)
     const milliseconds = (hours * 3600 + minutes * 60 + seconds) * 1000
     this.finishTime = new Date(Date.now() + milliseconds)
+    const repairState = await db.State.getRepairingState()
     this.idState = repairState.id
     this.idNextState = this.repairCollector!.idStateTo
+
+    await this.save()
+  }
+
+  async upgrade(db: any) {
+    if (!this.state?.canUpgrade()) {
+      throw new Error('Collector cannot be upgraded')
+    }
+    if (this.citadel!.resources < this.levelCollector!.upgradeResources) {
+      throw new Error('Not enough resources to upgrade')
+    }
+    if (this.citadel!.materials < this.levelCollector!.upgradeMaterials) {
+      throw new Error('Not enough materials to upgrade')
+    }
+
+    this.citadel!.resources -= this.levelCollector!.upgradeResources
+    this.citadel!.materials -= this.levelCollector!.upgradeMaterials
+    await this.citadel!.save()
+
+    const timeToUpgrade = this.levelCollector!.timeToUpgrade
+    const [hours, minutes, seconds] = timeToUpgrade.split(':').map(Number)
+    const milliseconds = (hours * 3600 + minutes * 60 + seconds) * 1000
+    this.finishTime = new Date(Date.now() + milliseconds)
+    this.idNextState = this.idState
+    const upgradeState = await db.State.getUpgradingState()
+    this.idState = upgradeState.id
 
     await this.save()
   }

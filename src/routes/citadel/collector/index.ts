@@ -2,6 +2,7 @@ import express, { Router, Request, Response } from 'express'
 import db from '../../../models'
 import { collect } from './collect'
 import { repair } from './repair'
+import { upgrade } from './upgrade'
 
 const router: Router = express.Router({ mergeParams: true })
 
@@ -12,6 +13,7 @@ router.get('/', async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Citadel not found' })
     }
 
+    await citadel.updateCitadel(db)
     let collector = citadel.collector
 
     if (!collector) {
@@ -40,5 +42,6 @@ router.get('/', async (req: Request, res: Response) => {
 
 router.post('/collect', collect)
 router.post('/repair', repair)
+router.post('/upgrade', upgrade)
 
 export default router
