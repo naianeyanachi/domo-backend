@@ -10,4 +10,3 @@ seed:
 
 seed-undo:
 	npx sequelize-cli db:seed:undo:all
-
