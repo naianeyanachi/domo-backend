@@ -21,6 +21,11 @@ export class Citadel extends Model {
       foreignKey: 'idCitadel',
       as: 'collector',
     })
+    Citadel.belongsTo(models.Player, {
+      targetKey: 'id',
+      foreignKey: 'idPlayer',
+      as: 'player',
+    })
   }
 
   public static async getCitadel(db: any, id: number) {
@@ -50,6 +55,7 @@ export class Citadel extends Model {
             { model: db.RepairFactory, as: 'repairFactory', required: false },
           ],
         },
+        { model: db.Player, as: 'player' },
       ],
     })
   }
