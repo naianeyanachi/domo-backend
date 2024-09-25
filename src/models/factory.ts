@@ -40,11 +40,11 @@ export class Factory extends Model {
     })
   }
 
-  async updateFactory(db: any) {
+  async updateFactory(db: any, date: Date) {
     if (!this.finishTime) {
       return
     }
-    if (this.finishTime < new Date()) {
+    if (this.finishTime < date) {
       if (this.idState == (await db.State.getManufacturingState()).id) {
         const yieldFactory = this.levelFactory!.yield
         await this.citadel!.addMaterials(yieldFactory)

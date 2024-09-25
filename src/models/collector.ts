@@ -40,11 +40,11 @@ export class Collector extends Model {
     })
   }
 
-  async updateCollector(db: any) {
+  async updateCollector(db: any, date: Date) {
     if (!this.finishTime) {
       return
     }
-    if (this.finishTime < new Date()) {
+    if (this.finishTime < date) {
       if (this.idState == (await db.State.getCollectingState()).id) {
         const yieldCollector = this.levelCollector!.yield
         await this.citadel!.addResources(yieldCollector)

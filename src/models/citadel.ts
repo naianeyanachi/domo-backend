@@ -1,6 +1,7 @@
 import { Model, DataTypes, Sequelize } from 'sequelize'
 import { Collector } from './collector'
 import { Factory } from './factory'
+import { Player } from './player'
 
 export class Citadel extends Model {
   public id?: number
@@ -9,6 +10,7 @@ export class Citadel extends Model {
   public materials!: number
   public collector?: Collector
   public factory?: Factory
+  public player?: Player
 
   public static associate(models: any): void {
     Citadel.hasOne(models.Factory, {
@@ -71,8 +73,10 @@ export class Citadel extends Model {
   }
 
   async updateCitadel(db: any) {
-    await this.collector?.updateCollector(db)
-    await this.factory?.updateFactory(db)
+    const date = new Date()
+    await this.player?.updatePlayer(date)
+    await this.collector?.updateCollector(db, date)
+    await this.factory?.updateFactory(db, date)
   }
 }
 

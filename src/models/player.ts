@@ -12,6 +12,11 @@ export class Player extends Model {
       as: 'citadel',
     })
   }
+
+  async updatePlayer(date: Date) {
+    this.lastLogin = date
+    await this.save()
+  }
 }
 
 export default (sequelize: Sequelize) => {
