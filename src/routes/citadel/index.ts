@@ -29,6 +29,12 @@ router.use('/:id/factory', factory)
 
 router.post('/', async (req: Request, res: Response) => {
   try {
+    if (!req.body.idPlayer) {
+      return res.status(400).json({ message: 'idPlayer is required' })
+    }
+    if (!req.body.name) {
+      return res.status(400).json({ message: 'name is required' })
+    }
     const newCitadel = await db.Citadel.create(req.body)
     const idleState = await db.State.getOKState()
     await db.Collector.create({
