@@ -8,6 +8,7 @@ export class Citadel extends Model {
   public name!: string
   public resources!: number
   public materials!: number
+  public idPlayer!: number
   public collector?: Collector
   public factory?: Factory
   public player?: Player
@@ -73,6 +74,7 @@ export class Citadel extends Model {
   }
 
   async updateCitadel(db: any) {
+    // TODO: citadel idle production
     const date = new Date()
     await this.player?.updatePlayer(date)
     await this.collector?.updateCollector(db, date)
@@ -102,6 +104,10 @@ export default (sequelize: Sequelize) => {
       materials: {
         type: DataTypes.INTEGER,
         defaultValue: 0,
+        allowNull: false,
+      },
+      idPlayer: {
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
     },
