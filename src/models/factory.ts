@@ -45,10 +45,10 @@ export class Factory extends Model {
       return
     }
     if (this.finishTime < date) {
-      if (this.idState == (await db.State.getManufacturingState()).id) {
+      if (this.state!.isManufacturing()) {
         const yieldFactory = this.levelFactory!.yield
         await this.citadel!.addMaterials(yieldFactory)
-      } else if (this.idState == (await db.State.getUpgradingState()).id) {
+      } else if (this.state!.isUpgrading()) {
         this.level += 1
       }
 

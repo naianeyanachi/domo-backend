@@ -45,10 +45,10 @@ export class Collector extends Model {
       return
     }
     if (this.finishTime < date) {
-      if (this.idState == (await db.State.getCollectingState()).id) {
+      if (this.state!.isCollecting()) {
         const yieldCollector = this.levelCollector!.yield
         await this.citadel!.addResources(yieldCollector)
-      } else if (this.idState == (await db.State.getUpgradingState()).id) {
+      } else if (this.state!.isUpgrading()) {
         this.level += 1
       }
 
