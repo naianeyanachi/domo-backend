@@ -2,8 +2,8 @@
 import { Model, DataTypes, Sequelize } from 'sequelize'
 import { Citadel } from './citadel'
 import { State } from './state'
-import { LevelCollector } from './levelCollector'
-import { RepairCollector } from './repairCollector'
+import { LevelCollector } from './level-collector'
+import { RepairCollector } from './repair-collector'
 
 export class Collector extends Model {
   public idCitadel!: number

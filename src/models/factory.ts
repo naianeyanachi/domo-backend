@@ -2,8 +2,8 @@
 import { Model, DataTypes, Sequelize } from 'sequelize'
 import { Citadel } from './citadel'
 import { State } from './state'
-import { LevelFactory } from './levelFactory'
-import { RepairFactory } from './repairFactory'
+import { LevelFactory } from './level-factory'
+import { RepairFactory } from './repair-factory'
 
 export class Factory extends Model {
   public idCitadel!: number
