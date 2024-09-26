@@ -8,12 +8,14 @@ export class WeatherRequirement extends Model {
 
   static associate(models: any) {
     WeatherRequirement.hasOne(models.Weather, {
-      foreignKey: 'idWeather',
-      sourceKey: 'id',
+      foreignKey: 'id',
+      sourceKey: 'idWeather',
+      as: 'weather',
     })
     WeatherRequirement.hasOne(models.Structure, {
-      foreignKey: 'idRequiredStructure',
-      sourceKey: 'id',
+      foreignKey: 'id',
+      sourceKey: 'idRequiredStructure',
+      as: 'structure',
     })
   }
 }
