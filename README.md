@@ -1,12 +1,10 @@
 # domo-backend
 
-
 ## Requisitos
 
 - NodeJS
 - Docker
 - Docker Compose
-
 
 ## Rodando o projeto
 
@@ -26,7 +24,6 @@ docker-compose up
 
 - O banco de dados estará rodando na porta 5432.
 - O servidor estará rodando na porta 3000.
-
 
 ## Rodando as migrations
 
