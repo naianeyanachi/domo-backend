@@ -75,7 +75,7 @@ export class Collector extends Model {
   }
 
   async repair(db: any) {
-    if (!this.state?.canRepair()) {
+    if (!this.state!.canRepair()) {
       throw new Error('Collector cannot be repaired')
     }
     if (this.citadel!.resources < this.repairCollector!.resources) {
@@ -101,7 +101,7 @@ export class Collector extends Model {
   }
 
   async upgrade(db: any) {
-    if (!this.state?.canUpgrade()) {
+    if (!this.state!.canUpgrade()) {
       throw new Error('Collector cannot be upgraded')
     }
     if (this.citadel!.resources < this.levelCollector!.upgradeResources) {

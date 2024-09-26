@@ -82,7 +82,7 @@ export class Factory extends Model {
   }
 
   async repair(db: any) {
-    if (!this.state?.canRepair()) {
+    if (!this.state!.canRepair()) {
       throw new Error('Factory cannot be repaired')
     }
     if (this.citadel!.resources < this.repairFactory!.resources) {
@@ -108,7 +108,7 @@ export class Factory extends Model {
   }
 
   async upgrade(db: any) {
-    if (!this.state?.canUpgrade()) {
+    if (!this.state!.canUpgrade()) {
       throw new Error('Factory cannot be upgraded')
     }
     if (this.citadel!.resources < this.levelFactory!.upgradeResources) {
