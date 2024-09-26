@@ -2,26 +2,14 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('WeatherRequirement', {
+    await queryInterface.createTable('WeatherPlayerOption', {
+      idPlayer: {
+        primaryKey: true,
+        allowNull: false,
+        type: Sequelize.INTEGER,
+      },
       idWeather: {
         primaryKey: true,
-        allowNull: false,
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'Weather',
-          key: 'id',
-        },
-      },
-      idRequiredStructure: {
-        primaryKey: true,
-        allowNull: false,
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'Structure',
-          key: 'id',
-        },
-      },
-      level: {
         allowNull: false,
         type: Sequelize.INTEGER,
       },
@@ -36,6 +24,6 @@ module.exports = {
     })
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('WeatherRequirement')
+    await queryInterface.dropTable('WeatherPlayerOption')
   },
 }

@@ -1,10 +1,12 @@
 'use strict'
 import { Model, DataTypes, Sequelize } from 'sequelize'
+import { Structure } from './structure'
 
 export class WeatherRequirement extends Model {
   public idWeather!: number
   public idRequiredStructure!: number
   public level!: number
+  public structure!: Structure
 
   static associate(models: any) {
     WeatherRequirement.hasOne(models.Weather, {

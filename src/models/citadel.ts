@@ -76,9 +76,10 @@ export class Citadel extends Model {
   async updateCitadel(db: any) {
     // TODO: citadel idle production
     const date = new Date()
-    await this.player?.updatePlayer(date)
-    await this.collector?.updateCollector(db, date)
-    await this.factory?.updateFactory(db, date)
+    await this.player!.updatePlayer(db, date)
+    await this.collector!.updateCollector(db, date) // TODO: collector state change by weather
+    await this.factory!.updateFactory(db, date) // TODO: factory state change by weather
+    await this.player!.updateWeatherOptions(db, this)
   }
 }
 

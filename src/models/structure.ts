@@ -1,6 +1,10 @@
 'use strict'
 import { Model, DataTypes, Sequelize } from 'sequelize'
 
+export const COLLECTOR = 'Collector'
+export const FACTORY = 'Factory'
+export const WEATHER_FORECAST = 'WeatherForecast'
+
 export class Structure extends Model {
   public id!: number
   public structure!: string

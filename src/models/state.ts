@@ -11,7 +11,6 @@ const DAMAGED = 'DAMAGED'
 const DESTROYED = 'DESTROYED'
 const REINFORCED = 'REINFORCED'
 
-
 export class State extends Model {
   public id!: number
   public state!: string
@@ -69,9 +68,7 @@ export class State extends Model {
 
   canRepair(): boolean {
     return (
-      this.state === WORN ||
-      this.state === DAMAGED ||
-      this.state === DESTROYED
+      this.state === WORN || this.state === DAMAGED || this.state === DESTROYED
     )
   }
 

@@ -1,10 +1,10 @@
-'use strict';
+'use strict'
 const { now } = require('sequelize/lib/utils')
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    const time = now();
+    const time = now()
     await queryInterface.bulkInsert(
       'WeatherRequirement',
       [
@@ -38,10 +38,10 @@ module.exports = {
         },
       ],
       {}
-    );
+    )
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('WeatherRequirement', null, {});
-  }
-};
+    await queryInterface.bulkDelete('WeatherRequirement', null, {})
+  },
+}

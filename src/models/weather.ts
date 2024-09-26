@@ -1,6 +1,11 @@
 'use strict'
 import { Model, DataTypes, Sequelize } from 'sequelize'
 
+export const NORMAL = 'NORMAL'
+export const BLIZZARD = 'BLIZZARD'
+export const CORROSIVE_RAIN = 'CORROSIVE_RAIN'
+export const METEOR_SHOWER = 'METEOR_SHOWER'
+
 export class Weather extends Model {
   public id!: number
   public weather!: string

@@ -39,6 +39,10 @@ router.post('/', async (req: Request, res: Response) => {
       email: req.body.email,
       lastLogin: new Date(),
     })
+    await db.WeatherPlayerOption.create({
+      idPlayer: newPlayer.id,
+      idWeather: 1,
+    })
     res.status(201).json(newPlayer)
   } catch (error: unknown) {
     console.error('Error creating player:', error)
