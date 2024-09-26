@@ -1,9 +1,10 @@
 'use strict';
+const { now } = require('sequelize/lib/utils')
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    const time = new Date();
+    const time = now();
     await queryInterface.bulkInsert(
       'WeatherRequirement',
       [

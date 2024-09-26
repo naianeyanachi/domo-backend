@@ -1,4 +1,5 @@
 'use strict';
+const { now } = require('sequelize/lib/utils')
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
