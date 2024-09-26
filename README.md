@@ -19,7 +19,7 @@ DB_HOST=postgresdb
 3. Subir os containers com o comando:
 
 ```bash
-docker-compose up
+npm run dev
 ```
 
 - O banco de dados estará rodando na porta 5432.
