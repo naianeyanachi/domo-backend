@@ -1,9 +1,10 @@
 'use strict'
-import { Model, DataTypes, Sequelize } from 'sequelize'
+import { Model, DataTypes, Sequelize, Op } from 'sequelize'
 import { Citadel } from './citadel'
 import { State } from './state'
 import { LevelCollector } from './level-collector'
 import { RepairCollector } from './repair-collector'
+import { WeatherPlayer } from './weather-player'
 
 export class Collector extends Model {
   public idCitadel!: number
@@ -124,6 +125,42 @@ export class Collector extends Model {
     this.idState = upgradeState.id
 
     await this.save()
+  }
+
+  async applyWeather(db: any, idPlayer: number, date: Date) {
+    if (this.finishTime && this.finishTime < date) {
+      const weatherPlayer: WeatherPlayer = await db.WeatherPlayer.findOne({
+        where: {
+          idPlayer: idPlayer,
+          datetimeEnd: {
+            [Op.gte]: this.finishTime,
+          },
+          datetimeStart: {
+            [Op.lte]: this.finishTime,
+          },
+        },
+        include: [
+          {
+            model: db.Weather,
+            as: 'weather',
+            include: {
+              model: db.State,
+              as: 'worstState',
+            },
+          },
+        ],
+      })
+      if (weatherPlayer.weather!.down > 0) {
+        const reinforcedState = await db.State.getReinforcedState()
+        const okState = await db.State.getOKState()
+        if (this.idNextState! == reinforcedState.id) {
+          this.idNextState = okState.id
+        } else if (this.idNextState! < weatherPlayer.weather!.worstState!.id) {
+          this.idNextState = weatherPlayer.weather!.worstState!.id
+        }
+        await this.save()
+      }
+    }
   }
 }
 

@@ -74,12 +74,20 @@ export class Citadel extends Model {
   }
 
   async updateCitadel(db: any) {
-    // TODO: citadel idle production
     const date = new Date()
-    await this.player!.updatePlayer(db, date)
-    await this.collector!.updateCollector(db, date) // TODO: collector state change by weather
-    await this.factory!.updateFactory(db, date) // TODO: factory state change by weather
+    await this.idleProduction()
+    await this.player!.updatePlayer(db, this, date)
+    await this.collector!.updateCollector(db, date)
+    await this.factory!.updateFactory(db, date)
     await this.player!.updateWeatherOptions(db, this)
+  }
+
+  async idleProduction() {
+    const lastLogin = this.player!.lastLogin
+    const timeSinceLastLogin = new Date().getTime() - lastLogin.getTime()
+    const hoursSinceLastLogin = timeSinceLastLogin / (1000 * 60 * 60)
+    const idleProduction = Math.round(hoursSinceLastLogin)
+    await this.addResources(idleProduction)
   }
 }
 

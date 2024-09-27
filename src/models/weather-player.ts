@@ -1,5 +1,5 @@
 'use strict'
-import { Model, DataTypes, Sequelize } from 'sequelize'
+import { Model, DataTypes, Sequelize, Op } from 'sequelize'
 import { Weather } from './weather'
 
 export class WeatherPlayer extends Model {
@@ -19,6 +19,32 @@ export class WeatherPlayer extends Model {
       foreignKey: 'id',
       sourceKey: 'idPlayer',
       as: 'player',
+    })
+  }
+
+  static async getWeather(db: any, idPlayer: number, date: Date) {
+    return await db.WeatherPlayer.findOne({
+      where: {
+        idPlayer,
+        datetimeStart: {
+          [Op.lte]: date,
+        },
+        datetimeEnd: {
+          [Op.gte]: date,
+        },
+      },
+      include: [
+        {
+          model: db.Weather,
+          as: 'weather',
+          include: [
+            {
+              model: db.State,
+              as: 'worstState',
+            },
+          ],
+        },
+      ],
     })
   }
 }

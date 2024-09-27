@@ -54,6 +54,10 @@ export class State extends Model {
     return (await this.findOne({ where: { state: MANUFACTURING } })) as State
   }
 
+  static async getReinforcedState(): Promise<State> {
+    return (await this.findOne({ where: { state: REINFORCED } })) as State
+  }
+
   isManufacturing(): boolean {
     return this.state === MANUFACTURING
   }

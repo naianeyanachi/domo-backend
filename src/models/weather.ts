@@ -1,5 +1,6 @@
 'use strict'
 import { Model, DataTypes, Sequelize } from 'sequelize'
+import { State } from './state'
 
 export const NORMAL = 'NORMAL'
 export const BLIZZARD = 'BLIZZARD'
@@ -13,11 +14,13 @@ export class Weather extends Model {
   public idWorstState!: number
   public minDuration!: string
   public percentageChance!: number
+  public worstState?: State
 
   static associate(models: any) {
     Weather.hasOne(models.State, {
       foreignKey: 'id',
       sourceKey: 'idWorstState',
+      as: 'worstState',
     })
     Weather.hasMany(models.WeatherRequirement, {
       foreignKey: 'idWeather',

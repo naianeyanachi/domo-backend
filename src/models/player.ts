@@ -4,6 +4,7 @@ import { Citadel } from './citadel'
 import { WeatherRequirement } from './weather-requirement'
 import { WeatherPlayerOption } from './weather-player-options'
 import { NORMAL } from './weather'
+import { WeatherPlayer } from './weather-player'
 
 export class Player extends Model {
   public id!: number
@@ -23,14 +24,15 @@ export class Player extends Model {
     })
   }
 
-  async updatePlayer(db: any, date: Date) {
+  async updatePlayer(db: any, citadel: Citadel, date: Date) {
     await this.generateWeatherPlayer(db, date)
+    await this.applyWeather(db, citadel, date)
     this.lastLogin = date
     await this.save()
   }
 
   async generateWeatherPlayer(db: any, date: Date) {
-    const lastWeatherPlayer = await db.WeatherPlayer.findOne({
+    const lastWeatherPlayer: WeatherPlayer = await db.WeatherPlayer.findOne({
       where: {
         idPlayer: this.id,
       },
@@ -66,7 +68,6 @@ export class Player extends Model {
         },
         {}
       )
-    console.log(weatherChances)
     while (lastDate <= date) {
       const totalChance = 100
       const randomNumber = Math.random() * totalChance
@@ -166,6 +167,11 @@ export class Player extends Model {
         })
       }
     }
+  }
+
+  async applyWeather(db: any, citadel: Citadel, date: Date) {
+    await citadel.collector!.applyWeather(db, this.id, date)
+    await citadel.factory!.applyWeather(db, this.id, date)
   }
 }
 
