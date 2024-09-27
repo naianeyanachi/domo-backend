@@ -1,25 +1,27 @@
 'use strict'
-
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Citadel', {
-      id: {
+    await queryInterface.createTable('StructureRequirement', {
+      idStructure: {
+        type: Sequelize.INTEGER,
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        references: {
+          model: 'Structure',
+          key: 'id',
+        },
       },
-      name: {
-        allowNull: false,
-        unique: true,
-        type: Sequelize.STRING,
-      },
-      resources: {
+      idRequiredStructure: {
         allowNull: false,
         type: Sequelize.INTEGER,
+        primaryKey: true,
+        references: {
+          model: 'Structure',
+          key: 'id',
+        },
       },
-      materials: {
+      level: {
         allowNull: false,
         type: Sequelize.INTEGER,
       },
@@ -34,6 +36,6 @@ module.exports = {
     })
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Citadel')
+    await queryInterface.dropTable('StructureRequirement')
   },
 }

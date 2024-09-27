@@ -1,9 +1,10 @@
 'use strict'
-import { Model, DataTypes, Sequelize } from 'sequelize'
+import { Model, DataTypes, Sequelize, Op } from 'sequelize'
 import { Citadel } from './citadel'
 import { State } from './state'
-import { LevelCollector } from './levelCollector'
-import { RepairCollector } from './repairCollector'
+import { LevelCollector } from './level-collector'
+import { RepairCollector } from './repair-collector'
+import { WeatherPlayer } from './weather-player'
 
 export class Collector extends Model {
   public idCitadel!: number
@@ -40,15 +41,15 @@ export class Collector extends Model {
     })
   }
 
-  async updateCollector(db: any) {
+  async updateCollector(db: any, date: Date) {
     if (!this.finishTime) {
       return
     }
-    if (this.finishTime < new Date()) {
-      if (this.idState == (await db.State.getCollectingState()).id) {
+    if (this.finishTime < date) {
+      if (this.state!.isCollecting()) {
         const yieldCollector = this.levelCollector!.yield
         await this.citadel!.addResources(yieldCollector)
-      } else if (this.idState == (await db.State.getUpgradingState()).id) {
+      } else if (this.state!.isUpgrading()) {
         this.level += 1
       }
 
@@ -75,7 +76,7 @@ export class Collector extends Model {
   }
 
   async repair(db: any) {
-    if (!this.state?.canRepair()) {
+    if (!this.state!.canRepair()) {
       throw new Error('Collector cannot be repaired')
     }
     if (this.citadel!.resources < this.repairCollector!.resources) {
@@ -101,7 +102,7 @@ export class Collector extends Model {
   }
 
   async upgrade(db: any) {
-    if (!this.state?.canUpgrade()) {
+    if (!this.state!.canUpgrade()) {
       throw new Error('Collector cannot be upgraded')
     }
     if (this.citadel!.resources < this.levelCollector!.upgradeResources) {
@@ -124,6 +125,42 @@ export class Collector extends Model {
     this.idState = upgradeState.id
 
     await this.save()
+  }
+
+  async applyWeather(db: any, idPlayer: number, date: Date) {
+    if (this.finishTime && this.finishTime < date) {
+      const weatherPlayer: WeatherPlayer = await db.WeatherPlayer.findOne({
+        where: {
+          idPlayer: idPlayer,
+          datetimeEnd: {
+            [Op.gte]: this.finishTime,
+          },
+          datetimeStart: {
+            [Op.lte]: this.finishTime,
+          },
+        },
+        include: [
+          {
+            model: db.Weather,
+            as: 'weather',
+            include: {
+              model: db.State,
+              as: 'worstState',
+            },
+          },
+        ],
+      })
+      if (weatherPlayer.weather!.down > 0) {
+        const reinforcedState = await db.State.getReinforcedState()
+        const okState = await db.State.getOKState()
+        if (this.idNextState! == reinforcedState.id) {
+          this.idNextState = okState.id
+        } else if (this.idNextState! < weatherPlayer.weather!.worstState!.id) {
+          this.idNextState = weatherPlayer.weather!.worstState!.id
+        }
+        await this.save()
+      }
+    }
   }
 }
 

@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import { Sequelize, DataTypes } from 'sequelize'
+import { Sequelize } from 'sequelize'
 import process from 'process'
 
 const basename = path.basename(__filename)

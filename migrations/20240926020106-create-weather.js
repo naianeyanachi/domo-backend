@@ -1,27 +1,36 @@
 'use strict'
-
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Citadel', {
+    await queryInterface.createTable('Weather', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      name: {
+      weather: {
         allowNull: false,
-        unique: true,
         type: Sequelize.STRING,
       },
-      resources: {
+      down: {
         allowNull: false,
         type: Sequelize.INTEGER,
       },
-      materials: {
-        allowNull: false,
+      idWorstState: {
         type: Sequelize.INTEGER,
+        references: {
+          model: 'State',
+          key: 'id',
+        },
+      },
+      minDuration: {
+        allowNull: false,
+        type: Sequelize.TIME,
+      },
+      percentageChance: {
+        allowNull: false,
+        type: Sequelize.DOUBLE,
       },
       createdAt: {
         allowNull: false,
@@ -34,6 +43,6 @@ module.exports = {
     })
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Citadel')
+    await queryInterface.dropTable('Weather')
   },
 }

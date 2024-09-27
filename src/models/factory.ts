@@ -1,9 +1,10 @@
 'use strict'
-import { Model, DataTypes, Sequelize } from 'sequelize'
+import { Model, DataTypes, Sequelize, Op } from 'sequelize'
 import { Citadel } from './citadel'
 import { State } from './state'
-import { LevelFactory } from './levelFactory'
-import { RepairFactory } from './repairFactory'
+import { LevelFactory } from './level-factory'
+import { RepairFactory } from './repair-factory'
+import { WeatherPlayer } from './weather-player'
 
 export class Factory extends Model {
   public idCitadel!: number
@@ -40,15 +41,15 @@ export class Factory extends Model {
     })
   }
 
-  async updateFactory(db: any) {
+  async updateFactory(db: any, date: Date) {
     if (!this.finishTime) {
       return
     }
-    if (this.finishTime < new Date()) {
-      if (this.idState == (await db.State.getManufacturingState()).id) {
+    if (this.finishTime < date) {
+      if (this.state!.isManufacturing()) {
         const yieldFactory = this.levelFactory!.yield
         await this.citadel!.addMaterials(yieldFactory)
-      } else if (this.idState == (await db.State.getUpgradingState()).id) {
+      } else if (this.state!.isUpgrading()) {
         this.level += 1
       }
 
@@ -82,7 +83,7 @@ export class Factory extends Model {
   }
 
   async repair(db: any) {
-    if (!this.state?.canRepair()) {
+    if (!this.state!.canRepair()) {
       throw new Error('Factory cannot be repaired')
     }
     if (this.citadel!.resources < this.repairFactory!.resources) {
@@ -108,7 +109,7 @@ export class Factory extends Model {
   }
 
   async upgrade(db: any) {
-    if (!this.state?.canUpgrade()) {
+    if (!this.state!.canUpgrade()) {
       throw new Error('Factory cannot be upgraded')
     }
     if (this.citadel!.resources < this.levelFactory!.upgradeResources) {
@@ -131,6 +132,42 @@ export class Factory extends Model {
     this.idState = upgradeState.id
 
     await this.save()
+  }
+
+  async applyWeather(db: any, idPlayer: number, date: Date) {
+    if (this.finishTime && this.finishTime < date) {
+      const weatherPlayer: WeatherPlayer = await db.WeatherPlayer.findOne({
+        where: {
+          idPlayer: idPlayer,
+          datetimeEnd: {
+            [Op.gte]: this.finishTime,
+          },
+          datetimeStart: {
+            [Op.lte]: this.finishTime,
+          },
+        },
+        include: [
+          {
+            model: db.Weather,
+            as: 'weather',
+            include: {
+              model: db.State,
+              as: 'worstState',
+            },
+          },
+        ],
+      })
+      if (weatherPlayer.weather!.down > 0) {
+        const reinforcedState = await db.State.getReinforcedState()
+        const okState = await db.State.getOKState()
+        if (this.idNextState! == reinforcedState.id) {
+          this.idNextState = okState.id
+        } else if (this.idNextState! < weatherPlayer.weather!.worstState!.id) {
+          this.idNextState = weatherPlayer.weather!.worstState!.id
+        }
+        await this.save()
+      }
+    }
   }
 }
 

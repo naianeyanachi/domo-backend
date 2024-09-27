@@ -14,14 +14,14 @@ export const upgrade = async (req: Request, res: Response) => {
     const updatedCitadel = await db.Citadel.getCitadel(db, req.params.id)
     return res.json(updatedCitadel)
   } catch (error: unknown) {
-    console.error('Error upgrading collector:', error)
+    console.error('Error upgrading factory:', error)
     if (error instanceof Error) {
       res
         .status(400)
-        .json({ message: 'Failed to upgrade collector', error: error.message })
+        .json({ message: 'Failed to upgrade factory', error: error.message })
     } else {
       res.status(400).json({
-        message: 'Failed to upgrade collector',
+        message: 'Failed to upgrade factory',
         error: 'An unknown error occurred',
       })
     }
