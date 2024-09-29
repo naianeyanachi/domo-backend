@@ -101,6 +101,32 @@ export class Collector extends Model {
     await this.save()
   }
 
+  async reinforce(db: any) {
+    if (!this.state!.canReinforce()) {
+      throw new Error('Collector cannot be reinforced')
+    }
+    if (this.citadel!.resources < this.repairCollector!.resources) {
+      throw new Error('Not enough resources to reinforce')
+    }
+    if (this.citadel!.materials < this.repairCollector!.materials) {
+      throw new Error('Not enough materials to reinforce')
+    }
+
+    this.citadel!.resources -= this.repairCollector!.resources
+    this.citadel!.materials -= this.repairCollector!.materials
+    await this.citadel!.save()
+
+    const timeToReinforce = this.repairCollector!.timeToRepair
+    const [hours, minutes, seconds] = timeToReinforce.split(':').map(Number)
+    const milliseconds = (hours * 3600 + minutes * 60 + seconds) * 1000
+    this.finishTime = new Date(Date.now() + milliseconds)
+    const reinforceState = await db.State.getRepairingState()
+    this.idState = reinforceState.id
+    this.idNextState = this.repairCollector!.idStateTo
+
+    await this.save()
+  }
+
   async upgrade(db: any) {
     if (!this.state!.canUpgrade()) {
       throw new Error('Collector cannot be upgraded')

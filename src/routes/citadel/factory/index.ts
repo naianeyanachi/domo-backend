@@ -2,6 +2,7 @@ import express, { Router, Request, Response } from 'express'
 import db from '../../../models'
 import { manufacture } from './manufacture'
 import { repair } from './repair'
+import { reinforce } from './reinforce'
 import { upgrade } from './upgrade'
 
 const router: Router = express.Router({ mergeParams: true })
@@ -41,6 +42,7 @@ router.get('/', async (req: Request, res: Response) => {
 
 router.post('/manufacture', manufacture)
 router.post('/repair', repair)
+router.post('/reinforce', reinforce)
 router.post('/upgrade', upgrade)
 
 export default router
