@@ -16,9 +16,10 @@ export const reinforce = async (req: Request, res: Response) => {
   } catch (error: unknown) {
     console.error('Error reinforcing collector:', error)
     if (error instanceof Error) {
-      res
-        .status(400)
-        .json({ message: 'Failed to reinforce collector', error: error.message })
+      res.status(400).json({
+        message: 'Failed to reinforce collector',
+        error: error.message,
+      })
     } else {
       res.status(400).json({
         message: 'Failed to reinforce collector',

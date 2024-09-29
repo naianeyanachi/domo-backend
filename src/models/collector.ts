@@ -106,10 +106,10 @@ export class Collector extends Model {
       throw new Error('Collector cannot be reinforced')
     }
     if (this.citadel!.resources < this.repairCollector!.resources) {
-      throw new Error('Not enough resources to repair')
+      throw new Error('Not enough resources to reinforce')
     }
     if (this.citadel!.materials < this.repairCollector!.materials) {
-      throw new Error('Not enough materials to repair')
+      throw new Error('Not enough materials to reinforce')
     }
 
     this.citadel!.resources -= this.repairCollector!.resources

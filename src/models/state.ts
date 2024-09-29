@@ -77,9 +77,7 @@ export class State extends Model {
   }
 
   canReinforce(): boolean {
-    return (
-      this.state === OK
-    )
+    return this.state === OK
   }
 
   canUpgrade(): boolean {
