@@ -7,11 +7,19 @@ module.exports = {
         primaryKey: true,
         allowNull: false,
         type: Sequelize.INTEGER,
+        references: {
+          model: 'Player',
+          key: 'id',
+        },
       },
       idWeather: {
         primaryKey: true,
         allowNull: false,
         type: Sequelize.INTEGER,
+        references: {
+          model: 'Weather',
+          key: 'id',
+        },
       },
       createdAt: {
         allowNull: false,
