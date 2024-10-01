@@ -2,6 +2,7 @@ import { Model, DataTypes, Sequelize } from 'sequelize'
 import { Collector } from './collector'
 import { Factory } from './factory'
 import { Player } from './player'
+import { WeatherForecast } from './weather-forecast'
 
 export class Citadel extends Model {
   public id?: number
@@ -12,6 +13,7 @@ export class Citadel extends Model {
   public collector?: Collector
   public factory?: Factory
   public player?: Player
+  public weatherForecast?: WeatherForecast
 
   public static associate(models: any): void {
     Citadel.hasOne(models.Factory, {
@@ -29,10 +31,15 @@ export class Citadel extends Model {
       foreignKey: 'idPlayer',
       as: 'player',
     })
+    Citadel.hasOne(models.WeatherForecast, {
+      sourceKey: 'id',
+      foreignKey: 'idCitadel',
+      as: 'weatherForecast',
+    })
   }
 
   public static async getCitadel(db: any, id: number) {
-    return await db.Citadel.findByPk(id, {
+    const citadel: Citadel | null = await db.Citadel.findByPk(id, {
       include: [
         {
           model: db.Collector,
@@ -58,9 +65,30 @@ export class Citadel extends Model {
             { model: db.RepairFactory, as: 'repairFactory', required: false },
           ],
         },
+        {
+          model: db.WeatherForecast,
+          as: 'weatherForecast',
+          required: false,
+          include: [
+            { model: db.State, as: 'state' },
+            { model: db.LevelWeatherForecast, as: 'levelWeatherForecast' },
+            { model: db.Citadel, as: 'citadel' },
+            {
+              model: db.RepairWeatherForecast,
+              as: 'repairWeatherForecast',
+              required: false,
+            },
+          ],
+        },
         { model: db.Player, as: 'player' },
       ],
     })
+    // TODO: add weatherforecast if it isnt built yet
+    // if can build weatherforecast, show Structure
+    // else if cant build weatherforecast, null
+
+    // TODO: add current weather
+    return citadel
   }
 
   async addResources(resources: number) {

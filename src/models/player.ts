@@ -32,6 +32,7 @@ export class Player extends Model {
   }
 
   async generateWeatherPlayer(db: any, date: Date) {
+    // TODO: include weatherforecast if built
     const lastWeatherPlayer: WeatherPlayer = await db.WeatherPlayer.findOne({
       where: {
         idPlayer: this.id,
