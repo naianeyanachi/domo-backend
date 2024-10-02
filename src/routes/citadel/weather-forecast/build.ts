@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
 import db from '../../../models'
+import { WEATHER_FORECAST } from '../../../models/structure'
 
 export const build = async (req: Request, res: Response) => {
   try {
@@ -9,7 +10,17 @@ export const build = async (req: Request, res: Response) => {
     }
 
     await citadel.updateCitadel(db)
-    // TODO: build weather forecast
+
+    if (!citadel.build[WEATHER_FORECAST]) {
+      return res.status(400).json({ message: 'Weather forecast cannot be built' })
+    }
+
+    const idleState = await db.State.getOKState()
+    await db.WeatherForecast.create({
+      idCitadel: citadel.id,
+      level: 1,
+      idState: idleState.id,
+    })
 
     const updatedCitadel = await db.Citadel.getCitadel(db, req.params.id)
     return res.json(updatedCitadel)
