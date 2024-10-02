@@ -12,7 +12,9 @@ export const build = async (req: Request, res: Response) => {
     await citadel.updateCitadel(db)
 
     if (!citadel.build[WEATHER_FORECAST]) {
-      return res.status(400).json({ message: 'Weather forecast cannot be built' })
+      return res
+        .status(400)
+        .json({ message: 'Weather forecast cannot be built' })
     }
 
     const idleState = await db.State.getOKState()

@@ -111,35 +111,42 @@ export class Citadel extends Model {
     return citadel
   }
 
-  static async getBuilds(db: any, citadel: Citadel): Promise<{ [key: string]: Build }> {
+  static async getBuilds(
+    db: any,
+    citadel: Citadel
+  ): Promise<{ [key: string]: Build }> {
     const builds: { [key: string]: Build } = {}
-    const requiredStructures: StructureRequirement[] = await db.StructureRequirement.findAll({
-      include: [
-        {
-          model: db.Structure,
-          as: 'requiredStructure',
-        },
-        {
-          model: db.Structure,
-          as: 'structure',
-        },
-      ],
-    })
+    const requiredStructures: StructureRequirement[] =
+      await db.StructureRequirement.findAll({
+        include: [
+          {
+            model: db.Structure,
+            as: 'requiredStructure',
+          },
+          {
+            model: db.Structure,
+            as: 'structure',
+          },
+        ],
+      })
 
-    const requiredStructuresByStructure: { [key: string]: StructureRequirement[] } =
-      requiredStructures.reduce(
-        (acc: { [key: string]: StructureRequirement[] }, requiredStructure) => {
-          if (acc[requiredStructure.idStructure]) {
-            acc[requiredStructure.structure!.structure].push(requiredStructure)
-          } else {
-            acc[requiredStructure.structure!.structure] = [requiredStructure]
-          }
-          return acc
-        },
-        {}
-      )
+    const requiredStructuresByStructure: {
+      [key: string]: StructureRequirement[]
+    } = requiredStructures.reduce(
+      (acc: { [key: string]: StructureRequirement[] }, requiredStructure) => {
+        if (acc[requiredStructure.idStructure]) {
+          acc[requiredStructure.structure!.structure].push(requiredStructure)
+        } else {
+          acc[requiredStructure.structure!.structure] = [requiredStructure]
+        }
+        return acc
+      },
+      {}
+    )
 
-    for (const [structure, requiredStructures] of Object.entries(requiredStructuresByStructure)) {
+    for (const [structure, requiredStructures] of Object.entries(
+      requiredStructuresByStructure
+    )) {
       switch (structure) {
         case WEATHER_FORECAST:
           if (citadel!.weatherForecast) {
