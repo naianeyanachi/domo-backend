@@ -32,7 +32,42 @@ export class Player extends Model {
   }
 
   async generateWeatherPlayer(db: any, date: Date) {
-    // TODO: include weatherforecast if built
+    const maxLevel = await db.WeatherForecast.findOne({
+      attributes: [
+        [db.Sequelize.fn('MAX', db.Sequelize.col('level')), 'maxLevel'],
+      ],
+      include: [
+        {
+          attributes: [],
+          model: db.Citadel,
+          as: 'citadel',
+          include: [
+            {
+              attributes: [],
+              model: db.Player,
+              as: 'player',
+              where: {
+                id: this.id,
+              },
+            },
+          ],
+        },
+      ],
+      group: [db.Sequelize.col('citadel.id')],
+    })
+
+    if (maxLevel?.maxLevel) {
+      const levelWeatherForecast = await db.LevelWeatherForecast.findOne({
+        where: {
+          level: maxLevel.maxLevel,
+        },
+      })
+
+      const milliseconds =
+        levelWeatherForecast.forecastDays * 24 * 60 * 60 * 1000
+      date = new Date(date.getTime() + milliseconds)
+    }
+
     const lastWeatherPlayer: WeatherPlayer = await db.WeatherPlayer.findOne({
       where: {
         idPlayer: this.id,
