@@ -29,12 +29,10 @@ export const build = async (req: Request, res: Response) => {
   } catch (error: unknown) {
     console.error('Error building weather forecast:', error)
     if (error instanceof Error) {
-      res
-        .status(400)
-        .json({
-          message: 'Failed to build weather forecast',
-          error: error.message,
-        })
+      res.status(400).json({
+        message: 'Failed to build weather forecast',
+        error: error.message,
+      })
     } else {
       res.status(400).json({
         message: 'Failed to build weather forecast',
