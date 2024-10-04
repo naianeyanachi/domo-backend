@@ -2,6 +2,19 @@ import { Model, DataTypes, Sequelize } from 'sequelize'
 import { Collector } from './collector'
 import { Factory } from './factory'
 import { Player } from './player'
+import { WeatherForecast } from './weather-forecast'
+import { StructureRequirement } from './structure-requirement'
+import { COLLECTOR, FACTORY, WEATHER_FORECAST } from './structure'
+
+class Build {
+  public materials!: number
+  public resources!: number
+
+  constructor(resources: number, materials: number) {
+    this.materials = materials
+    this.resources = resources
+  }
+}
 
 export class Citadel extends Model {
   public id?: number
@@ -12,6 +25,16 @@ export class Citadel extends Model {
   public collector?: Collector
   public factory?: Factory
   public player?: Player
+  public weatherForecast?: WeatherForecast
+  public build?: { [key: string]: Build } | null
+
+  toJSON() {
+    const values = Object.assign({}, this.get())
+    if (this.build) {
+      values.build = this.build
+    }
+    return values
+  }
 
   public static associate(models: any): void {
     Citadel.hasOne(models.Factory, {
@@ -29,10 +52,15 @@ export class Citadel extends Model {
       foreignKey: 'idPlayer',
       as: 'player',
     })
+    Citadel.hasOne(models.WeatherForecast, {
+      sourceKey: 'id',
+      foreignKey: 'idCitadel',
+      as: 'weatherForecast',
+    })
   }
 
   public static async getCitadel(db: any, id: number) {
-    return await db.Citadel.findByPk(id, {
+    const citadel: Citadel | null = await db.Citadel.findByPk(id, {
       include: [
         {
           model: db.Collector,
@@ -58,9 +86,99 @@ export class Citadel extends Model {
             { model: db.RepairFactory, as: 'repairFactory', required: false },
           ],
         },
+        {
+          model: db.WeatherForecast,
+          as: 'weatherForecast',
+          required: false,
+          include: [
+            { model: db.State, as: 'state' },
+            { model: db.LevelWeatherForecast, as: 'levelWeatherForecast' },
+            { model: db.Citadel, as: 'citadel' },
+            {
+              model: db.RepairWeatherForecast,
+              as: 'repairWeatherForecast',
+              required: false,
+            },
+          ],
+        },
         { model: db.Player, as: 'player' },
       ],
     })
+    if (citadel) {
+      citadel!.build = await Citadel.getBuilds(db, citadel)
+    }
+    // TODO: add current weather
+    return citadel
+  }
+
+  static async getBuilds(
+    db: any,
+    citadel: Citadel
+  ): Promise<{ [key: string]: Build }> {
+    const builds: { [key: string]: Build } = {}
+    const requiredStructures: StructureRequirement[] =
+      await db.StructureRequirement.findAll({
+        include: [
+          {
+            model: db.Structure,
+            as: 'requiredStructure',
+          },
+          {
+            model: db.Structure,
+            as: 'structure',
+          },
+        ],
+      })
+
+    const requiredStructuresByStructure: {
+      [key: string]: StructureRequirement[]
+    } = requiredStructures.reduce(
+      (acc: { [key: string]: StructureRequirement[] }, requiredStructure) => {
+        if (acc[requiredStructure.idStructure]) {
+          acc[requiredStructure.structure!.structure].push(requiredStructure)
+        } else {
+          acc[requiredStructure.structure!.structure] = [requiredStructure]
+        }
+        return acc
+      },
+      {}
+    )
+
+    for (const [structure, requiredStructures] of Object.entries(
+      requiredStructuresByStructure
+    )) {
+      switch (structure) {
+        case WEATHER_FORECAST:
+          if (citadel!.weatherForecast) {
+            continue
+          }
+          break
+      }
+
+      let canBuild = true
+      for (const requiredStructure of requiredStructures) {
+        switch (requiredStructure.structure!.structure) {
+          case COLLECTOR:
+            if (citadel!.collector!.level < requiredStructure!.level) {
+              canBuild = false
+            }
+            break
+          case FACTORY:
+            if (citadel!.factory!.level < requiredStructure!.level) {
+              canBuild = false
+            }
+            break
+        }
+      }
+
+      if (canBuild) {
+        builds[structure] = new Build(
+          requiredStructures[0].structure!.buildResources,
+          requiredStructures[0].structure!.buildMaterials
+        )
+      }
+    }
+    return builds
   }
 
   async addResources(resources: number) {

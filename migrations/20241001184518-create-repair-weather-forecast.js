@@ -2,32 +2,44 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('WeatherPlayer', {
-      idPlayer: {
+    await queryInterface.createTable('RepairWeatherForecast', {
+      level: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        allowNull: false,
+        references: {
+          model: 'LevelWeatherForecast',
+          key: 'level',
+        },
+      },
+      idStateFrom: {
         primaryKey: true,
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
-          model: 'Player',
+          model: 'State',
           key: 'id',
         },
       },
-      idWeather: {
+      idStateTo: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
-          model: 'Weather',
+          model: 'State',
           key: 'id',
         },
       },
-      datetimeStart: {
+      resources: {
         allowNull: false,
-        primaryKey: true,
-        type: Sequelize.DATE,
+        type: Sequelize.INTEGER,
       },
-      datetimeEnd: {
+      materials: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.INTEGER,
+      },
+      timeToRepair: {
+        allowNull: false,
+        type: Sequelize.TIME,
       },
       createdAt: {
         allowNull: false,
@@ -40,6 +52,6 @@ module.exports = {
     })
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('WeatherPlayer')
+    await queryInterface.dropTable('RepairWeatherForecast')
   },
 }

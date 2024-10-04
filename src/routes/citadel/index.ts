@@ -2,6 +2,7 @@ import express, { Router, Request, Response } from 'express'
 import db from '../../models'
 import collector from './collector'
 import factory from './factory'
+import weatherForecast from './weather-forecast'
 
 const router: Router = express.Router()
 
@@ -26,6 +27,7 @@ router.get('/:id', async (req: Request, res: Response) => {
 
 router.use('/:id/collector', collector)
 router.use('/:id/factory', factory)
+router.use('/:id/weather-forecast', weatherForecast)
 
 router.post('/', async (req: Request, res: Response) => {
   try {
