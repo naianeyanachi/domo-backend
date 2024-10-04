@@ -20,10 +20,13 @@ router.get('/', async (req: Request, res: Response) => {
 
     res.json(weatherForecast)
   } catch (error) {
-    console.error('Error fetching factory:', error)
+    console.error('Error fetching weather forecast:', error)
     res
       .status(500)
-      .json({ message: 'Failed to fetch factory', error: 'An error occurred' })
+      .json({
+        message: 'Failed to fetch weather forecast',
+        error: 'An error occurred',
+      })
   }
 })
 
