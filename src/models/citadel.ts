@@ -4,7 +4,8 @@ import { Factory } from './factory'
 import { Player } from './player'
 import { WeatherForecast } from './weather-forecast'
 import { StructureRequirement } from './structure-requirement'
-import { COLLECTOR, FACTORY, WEATHER_FORECAST } from './structure'
+import { COLLECTOR, FACTORY, MACHINE_GUN_TURRET, WEATHER_FORECAST } from './structure'
+import { MachineGunTurret } from './machine-gun-turret'
 
 class Build {
   public materials!: number
@@ -26,6 +27,7 @@ export class Citadel extends Model {
   public factory?: Factory
   public player?: Player
   public weatherForecast?: WeatherForecast
+  public machineGunTurret?: MachineGunTurret
   public build?: { [key: string]: Build } | null
 
   toJSON() {
@@ -56,6 +58,11 @@ export class Citadel extends Model {
       sourceKey: 'id',
       foreignKey: 'idCitadel',
       as: 'weatherForecast',
+    })
+    Citadel.hasOne(models.MachineGunTurret, {
+      sourceKey: 'id',
+      foreignKey: 'idCitadel',
+      as: 'machineGunTurret',
     })
   }
 
@@ -97,6 +104,21 @@ export class Citadel extends Model {
             {
               model: db.RepairWeatherForecast,
               as: 'repairWeatherForecast',
+              required: false,
+            },
+          ],
+        },
+        {
+          model: db.MachineGunTurret,
+          as: 'machineGunTurret',
+          required: false,
+          include: [
+            { model: db.State, as: 'state' },
+            { model: db.LevelMachineGunTurret, as: 'levelMachineGunTurret' },
+            { model: db.Citadel, as: 'citadel' },
+            {
+              model: db.RepairMachineGunTurret,
+              as: 'repairMachineGunTurret',
               required: false,
             },
           ],
@@ -150,6 +172,11 @@ export class Citadel extends Model {
       switch (structure) {
         case WEATHER_FORECAST:
           if (citadel!.weatherForecast) {
+            continue
+          }
+          break
+        case MACHINE_GUN_TURRET:
+          if (citadel!.machineGunTurret) {
             continue
           }
           break

@@ -26,18 +26,15 @@ export class RepairMachineGunTurret extends Model {
 export default (sequelize: Sequelize) => {
   RepairMachineGunTurret.init(
     {
-      id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true,
-      },
       level: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        primaryKey: true,
       },
       idStateFrom: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        primaryKey: true,
       },
       idStateTo: {
         type: DataTypes.INTEGER,

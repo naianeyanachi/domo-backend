@@ -3,6 +3,7 @@ import db from '../../models'
 import collector from './collector'
 import factory from './factory'
 import weatherForecast from './weather-forecast'
+import machineGunTurret from './machine-gun-turret'
 
 const router: Router = express.Router()
 
@@ -28,6 +29,7 @@ router.get('/:id', async (req: Request, res: Response) => {
 router.use('/:id/collector', collector)
 router.use('/:id/factory', factory)
 router.use('/:id/weather-forecast', weatherForecast)
+router.use('/:id/machine-gun-turret', machineGunTurret)
 
 router.post('/', async (req: Request, res: Response) => {
   try {

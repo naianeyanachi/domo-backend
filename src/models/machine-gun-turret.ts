@@ -27,6 +27,11 @@ export class MachineGunTurret extends Model {
       sourceKey: 'level',
       as: 'levelMachineGunTurret',
     })
+    MachineGunTurret.hasOne(models.RepairMachineGunTurret, {
+      foreignKey: 'idStateFrom',
+      sourceKey: 'idState',
+      as: 'repairMachineGunTurret',
+    })
   }
 }
 
@@ -51,7 +56,6 @@ export default (sequelize: Sequelize) => {
       },
       finishTime: {
         type: DataTypes.DATE,
-        allowNull: false,
       },
       createdAt: {
         type: DataTypes.DATE,
