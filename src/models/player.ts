@@ -3,7 +3,7 @@ import { COLLECTOR, FACTORY } from './structure'
 import { Citadel } from './citadel'
 import { WeatherRequirement } from './weather-requirement'
 import { WeatherPlayerOption } from './weather-player-options'
-import { NORMAL } from './weather'
+import { WeatherType } from './weather'
 import { WeatherPlayer } from './weather-player'
 
 export class Player extends Model {
@@ -94,7 +94,7 @@ export class Player extends Model {
         ],
       })
     const unlockedNotNormalWeathers = unlockedWeathers.filter(
-      (weather: any) => weather.weather.weather !== NORMAL
+      (weather: any) => weather.weather.weather !== WeatherType.NORMAL
     )
     const weatherChances: { [key: number]: number } =
       unlockedNotNormalWeathers.reduce(
