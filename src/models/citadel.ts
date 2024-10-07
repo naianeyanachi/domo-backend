@@ -1,8 +1,8 @@
 import { Model, DataTypes, Sequelize } from 'sequelize'
-import { Collector } from './collector/collector'
-import { Factory } from './factory/factory'
+import { Collector } from './collector'
+import { Factory } from './factory'
 import { Player } from './player'
-import { WeatherForecast } from './weather-forecast/weather-forecast'
+import { WeatherForecast } from './weather-forecast'
 import { StructureRequirement } from './structure-requirement'
 import { COLLECTOR, FACTORY, WEATHER_FORECAST } from './structure'
 
