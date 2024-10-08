@@ -9,6 +9,10 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      type: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
       attackLow: {
         allowNull: false,
         type: Sequelize.INTEGER

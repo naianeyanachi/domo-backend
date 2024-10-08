@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import db from '../../../models'
-import { WEATHER_FORECAST } from '../../../models/structure'
+import { StructureType } from '../../../models/structure'
 
 export const build = async (req: Request, res: Response) => {
   try {
@@ -11,7 +11,7 @@ export const build = async (req: Request, res: Response) => {
 
     await citadel.updateCitadel(db)
 
-    if (!citadel.build[WEATHER_FORECAST]) {
+    if (!citadel.build[StructureType.WEATHER_FORECAST]) {
       return res
         .status(400)
         .json({ message: 'Weather forecast cannot be built' })

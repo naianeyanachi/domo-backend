@@ -1,10 +1,11 @@
 import { Model, DataTypes, Sequelize, Op } from 'sequelize'
-import { COLLECTOR, FACTORY } from './structure'
+import { StructureType } from './structure'
 import { Citadel } from './citadel'
 import { WeatherRequirement } from './weather-requirement'
 import { WeatherPlayerOption } from './weather-player-options'
 import { WeatherType } from './weather'
 import { WeatherPlayer } from './weather-player'
+import { EnemyType } from './enemy'
 
 export class Player extends Model {
   public id!: number
@@ -27,6 +28,7 @@ export class Player extends Model {
   async updatePlayer(db: any, citadel: Citadel, date: Date) {
     await this.generateWeatherPlayer(db, date)
     await this.applyWeather(db, citadel, date)
+    await this.generateHorde(db, citadel, date)
     this.lastLogin = date
     await this.save()
   }
@@ -187,10 +189,10 @@ export class Player extends Model {
       let unlock = false
       for (const requirement of weatherRequirements) {
         switch (requirement.structure.structure) {
-          case COLLECTOR:
+          case StructureType.COLLECTOR:
             unlock = unlock || citadel.collector!.level >= requirement.level
             break
-          case FACTORY:
+          case StructureType.FACTORY:
             unlock = unlock || citadel.factory!.level >= requirement.level
             break
         }
@@ -208,6 +210,94 @@ export class Player extends Model {
   async applyWeather(db: any, citadel: Citadel, date: Date) {
     await citadel.collector!.applyWeather(db, this.id, date)
     await citadel.factory!.applyWeather(db, this.id, date)
+  }
+
+  async generateHorde(db: any, citadel: Citadel, date: Date) {
+    const horde = await db.Horde.findOne({
+      where: {
+        idCitadel: citadel.id,
+      },
+      order: [['datetime', 'DESC']],
+    })
+    const lastHordeDate = horde?.datetime
+    if (lastHordeDate && lastHordeDate > date) {
+      return
+    }
+
+    const random = Math.random() * 10
+    const nextHordeDate = new Date(
+      date.getTime() + 10 * 60 * 60 * 1000 + random * 60 * 60 * 1000
+    )
+    const newHorde = await db.Horde.create({
+      idCitadel: citadel.id,
+      datetime: nextHordeDate,
+    })
+    const numCitadel = await db.Citadel.count({
+      where: {
+        idPlayer: this.id,
+      },
+    })
+
+    const enemyTypes = []
+    if (citadel.machineGunTurret) {
+      enemyTypes.push(EnemyType.TERRESTRIAL)
+    }
+    // TODO: check for other types of enemies
+
+    const enemies = await db.Enemy.findAll({
+      where: {
+        type: {
+          [Op.in]: enemyTypes,
+        },
+      },
+    })
+
+    const structures = await db.Structure.findAll()
+    const targetableStructures = []
+    for (const structure of structures) {
+      switch (structure.structure) {
+        case StructureType.COLLECTOR:
+          if (citadel.collector) {
+            targetableStructures.push(structure.id)
+          }
+          break
+        case StructureType.FACTORY:
+          if (citadel.factory) {
+            targetableStructures.push(structure.id)
+          }
+          break
+        case StructureType.WEATHER_FORECAST:
+          if (citadel.weatherForecast) {
+            targetableStructures.push(structure.id)
+          }
+          break
+        case StructureType.MACHINE_GUN_TURRET:
+          if (citadel.machineGunTurret) {
+            targetableStructures.push(structure.id)
+          }
+          break
+      }
+    }
+
+    const numHordeEnemies = Math.floor(Math.random() * 2 * numCitadel)
+    console.log("aaaaaaaaaaaaaa")
+    console.log(enemies)
+    for (let i = 0; i < numHordeEnemies; i++) {
+      const enemy = enemies[Math.floor(Math.random() * enemies.length)]
+      const attack = Math.floor(Math.random() * enemy.attackHigh) + enemy.attackLow
+      const life = Math.floor(Math.random() * enemy.lifeHigh) + enemy.lifeLow
+      const defense = Math.floor(Math.random() * enemy.defenseHigh) + enemy.defenseLow
+      const targetStructure = targetableStructures[Math.floor(Math.random() * targetableStructures.length)]
+
+      await db.HordeEnemy.create({
+        idHorde: newHorde.id,
+        idEnemy: enemy.id,
+        attack: attack,
+        life: life,
+        defense: defense,
+        idTargetStructure: targetStructure,
+      })
+    }
   }
 }
 

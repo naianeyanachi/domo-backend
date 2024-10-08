@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import db from '../../../models'
-import { MACHINE_GUN_TURRET } from '../../../models/structure'
+import { StructureType } from '../../../models/structure'
 
 export const build = async (req: Request, res: Response) => {
   try {
@@ -11,7 +11,7 @@ export const build = async (req: Request, res: Response) => {
 
     await citadel.updateCitadel(db)
 
-    if (!citadel.build[MACHINE_GUN_TURRET]) {
+    if (!citadel.build[StructureType.MACHINE_GUN_TURRET]) {
       return res
         .status(400)
         .json({ message: 'Machine gun turret cannot be built' })
