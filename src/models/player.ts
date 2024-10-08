@@ -280,15 +280,12 @@ export class Player extends Model {
     }
 
     const numHordeEnemies = Math.floor(Math.random() * 2 * numCitadel)
-    console.log("aaaaaaaaaaaaaa")
-    console.log(enemies)
     for (let i = 0; i < numHordeEnemies; i++) {
       const enemy = enemies[Math.floor(Math.random() * enemies.length)]
       const attack = Math.floor(Math.random() * enemy.attackHigh) + enemy.attackLow
       const life = Math.floor(Math.random() * enemy.lifeHigh) + enemy.lifeLow
       const defense = Math.floor(Math.random() * enemy.defenseHigh) + enemy.defenseLow
       const targetStructure = targetableStructures[Math.floor(Math.random() * targetableStructures.length)]
-
       await db.HordeEnemy.create({
         idHorde: newHorde.id,
         idEnemy: enemy.id,
