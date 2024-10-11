@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('HordeLogs', {
+    await queryInterface.createTable('HordeLog', {
       idHorde: {
         primaryKey: true,
         allowNull: false,
@@ -48,6 +48,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('HordeLogs');
+    await queryInterface.dropTable('HordeLog');
   }
 };

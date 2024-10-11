@@ -1,5 +1,8 @@
 'use strict'
 import { Model, DataTypes, Sequelize } from 'sequelize'
+import { RepairMachineGunTurret } from './repair-machine-gun-turret'
+import { LevelMachineGunTurret } from './level-machine-gun-turret'
+import { State } from './state'
 
 export class MachineGunTurret extends Model {
   public id!: number
@@ -10,6 +13,9 @@ export class MachineGunTurret extends Model {
   public finishTime!: Date
   public createdAt!: Date
   public updatedAt!: Date
+  public levelMachineGunTurret?: LevelMachineGunTurret
+  public repairMachineGunTurret?: RepairMachineGunTurret
+  public state?: State
 
   static associate(models: any) {
     MachineGunTurret.belongsTo(models.Citadel, {

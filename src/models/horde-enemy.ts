@@ -1,5 +1,7 @@
 'use strict'
 import { Model, DataTypes, Sequelize } from 'sequelize'
+import { Structure } from './structure'
+import { Enemy } from './enemy'
 
 export class HordeEnemy extends Model {
   public id!: number
@@ -11,6 +13,8 @@ export class HordeEnemy extends Model {
   public idTargetStructure!: number
   public createdAt!: Date
   public updatedAt!: Date
+  public targetStructure?: Structure
+  public enemy?: Enemy
 
   static associate(models: any) {
     this.belongsTo(models.Horde, { foreignKey: 'idHorde', as: 'horde' })

@@ -51,7 +51,7 @@ export default (sequelize: Sequelize) => {
     {
       sequelize,
       modelName: 'HordeLog',
-      tableName: 'HordeLogs',
+      tableName: 'HordeLog',
     }
   )
 

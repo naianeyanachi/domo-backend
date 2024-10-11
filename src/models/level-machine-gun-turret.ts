@@ -4,6 +4,8 @@ import { Model, DataTypes, Sequelize } from 'sequelize'
 export class LevelMachineGunTurret extends Model {
   public id!: number
   public level!: number
+  public attack!: number
+  public defense!: number
   public upgradeResources!: number
   public upgradeMaterials!: number
   public timeToUpgrade!: string

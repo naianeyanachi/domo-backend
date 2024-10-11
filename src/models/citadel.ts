@@ -223,7 +223,10 @@ export class Citadel extends Model {
         {
           model: db.HordeEnemy,
           as: 'enemies',
-          include: [{ model: db.Enemy, as: 'enemy' }],
+          include: [
+            { model: db.Enemy, as: 'enemy' },
+            { model: db.Structure, as: 'targetStructure' },
+          ],
         },
       ],
       order: [['id', 'DESC']],
