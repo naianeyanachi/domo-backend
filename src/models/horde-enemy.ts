@@ -17,9 +17,9 @@ export class HordeEnemy extends Model {
   public enemy?: Enemy
 
   static associate(models: any) {
-    this.belongsTo(models.Horde, { foreignKey: 'idHorde', as: 'horde' })
-    this.belongsTo(models.Enemy, { foreignKey: 'idEnemy', as: 'enemy' })
-    this.belongsTo(models.Structure, {
+    HordeEnemy.belongsTo(models.Horde, { foreignKey: 'idHorde', as: 'horde' })
+    HordeEnemy.belongsTo(models.Enemy, { foreignKey: 'idEnemy', as: 'enemy' })
+    HordeEnemy.belongsTo(models.Structure, {
       foreignKey: 'idTargetStructure',
       as: 'targetStructure',
     })

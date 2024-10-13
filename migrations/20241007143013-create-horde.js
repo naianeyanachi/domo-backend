@@ -10,10 +10,16 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       datetime: {
+        allowNull: false,
         type: Sequelize.DATE,
       },
       idCitadel: {
         type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Citadel',
+          key: 'id',
+        },
       },
       createdAt: {
         allowNull: false,

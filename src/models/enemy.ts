@@ -18,7 +18,7 @@ export class Enemy extends Model {
   public defenseHigh!: number
 
   static associate(models: any) {
-    this.hasMany(models.HordeEnemy, { foreignKey: 'idEnemy' })
+    Enemy.hasMany(models.HordeEnemy, { foreignKey: 'idEnemy' })
   }
 }
 

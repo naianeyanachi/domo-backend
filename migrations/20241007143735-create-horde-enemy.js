@@ -26,12 +26,15 @@ module.exports = {
         },
       },
       attack: {
+        allowNull: false,
         type: Sequelize.INTEGER,
       },
       life: {
+        allowNull: false,
         type: Sequelize.INTEGER,
       },
       defense: {
+        allowNull: false,
         type: Sequelize.INTEGER,
       },
       idTargetStructure: {
