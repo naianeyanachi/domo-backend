@@ -304,10 +304,10 @@ export class Player extends Model {
     if (!citadel.horde) {
       return
     }
-    if (citadel.horde!.logs!.length !== 0) {
+    if (citadel.horde!.datetime > date) {
       return
     }
-    if (citadel.horde!.datetime > date) {
+    if (citadel.horde!.logs && citadel.horde!.logs!.length !== 0) {
       return
     }
 
