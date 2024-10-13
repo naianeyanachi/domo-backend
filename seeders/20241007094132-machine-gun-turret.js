@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 const { now } = require('sequelize/lib/utils')
 
 /** @type {import('sequelize-cli').Migration} */
@@ -41,7 +41,15 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('Structure', { structure: 'MachineGunTurret' }, {});
-    await queryInterface.bulkDelete('StructureRequirement', { idStructure: 4 }, {});
-  }
-};
+    await queryInterface.bulkDelete(
+      'Structure',
+      { structure: 'MachineGunTurret' },
+      {}
+    )
+    await queryInterface.bulkDelete(
+      'StructureRequirement',
+      { idStructure: 4 },
+      {}
+    )
+  },
+}

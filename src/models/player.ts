@@ -285,10 +285,19 @@ export class Player extends Model {
     const numHordeEnemies = Math.floor(Math.random() * 2 * numCitadel)
     for (let i = 0; i < numHordeEnemies; i++) {
       const enemy = enemies[Math.floor(Math.random() * enemies.length)]
-      const attack = Math.floor(Math.random() * (enemy.attackHigh - enemy.attackLow)) + enemy.attackLow
-      const life = Math.floor(Math.random() * (enemy.lifeHigh - enemy.lifeLow)) + enemy.lifeLow
-      const defense = Math.floor(Math.random() * (enemy.defenseHigh - enemy.defenseLow)) + enemy.defenseLow
-      const targetStructure = targetableStructures[Math.floor(Math.random() * targetableStructures.length)]
+      const attack =
+        Math.floor(Math.random() * (enemy.attackHigh - enemy.attackLow)) +
+        enemy.attackLow
+      const life =
+        Math.floor(Math.random() * (enemy.lifeHigh - enemy.lifeLow)) +
+        enemy.lifeLow
+      const defense =
+        Math.floor(Math.random() * (enemy.defenseHigh - enemy.defenseLow)) +
+        enemy.defenseLow
+      const targetStructure =
+        targetableStructures[
+          Math.floor(Math.random() * targetableStructures.length)
+        ]
       await db.HordeEnemy.create({
         idHorde: newHorde.id,
         idEnemy: enemy.id,
@@ -317,7 +326,8 @@ export class Player extends Model {
     }
 
     if (citadel.machineGunTurret) {
-      totalAttack[EnemyType.TERRESTRIAL] += citadel.machineGunTurret.levelMachineGunTurret!.attack
+      totalAttack[EnemyType.TERRESTRIAL] +=
+        citadel.machineGunTurret.levelMachineGunTurret!.attack
     }
     // TODO: check for other defenses
 
@@ -330,14 +340,19 @@ export class Player extends Model {
         enemy.life = 0
         enemy.attack = 0
       } else {
-        const enemyLifeAfterAttack = enemyTrueLife - totalAttack[enemy.enemy!.type]
-        enemy.attack = Math.floor(enemy.attack * (enemyLifeAfterAttack / enemy.life))
+        const enemyLifeAfterAttack =
+          enemyTrueLife - totalAttack[enemy.enemy!.type]
+        enemy.attack = Math.floor(
+          enemy.attack * (enemyLifeAfterAttack / enemy.life)
+        )
         enemy.life = enemyLifeAfterAttack
       }
       enemy.save()
     }
 
-    const enemiesAlive = citadel.horde!.enemies!.filter((enemy: HordeEnemy) => enemy.life > 0)
+    const enemiesAlive = citadel.horde!.enemies!.filter(
+      (enemy: HordeEnemy) => enemy.life > 0
+    )
 
     for (const enemy of enemiesAlive) {
       let damage = enemy.attack
@@ -351,11 +366,13 @@ export class Player extends Model {
             damage = 0
           }
           oldState = citadel.machineGunTurret!.state!
-          newState = await citadel.machineGunTurret!.state!.getStateAfterDamage(damage)!
+          newState =
+            await citadel.machineGunTurret!.state!.getStateAfterDamage(damage)!
           break
         case StructureType.COLLECTOR:
           oldState = citadel.collector!.state!
-          newState = await citadel.collector!.state!.getStateAfterDamage(damage)!
+          newState =
+            await citadel.collector!.state!.getStateAfterDamage(damage)!
           break
         case StructureType.FACTORY:
           oldState = citadel.factory!.state!
@@ -363,7 +380,8 @@ export class Player extends Model {
           break
         case StructureType.WEATHER_FORECAST:
           oldState = citadel.weatherForecast!.state!
-          newState = await citadel.weatherForecast!.state!.getStateAfterDamage(damage)!
+          newState =
+            await citadel.weatherForecast!.state!.getStateAfterDamage(damage)!
           break
       }
 
@@ -373,7 +391,6 @@ export class Player extends Model {
         idStateFrom: oldState!.id,
         idStateTo: newState!.id,
       })
-
     }
   }
 }

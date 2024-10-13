@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -7,52 +7,52 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       idHorde: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
           model: 'Horde',
-          key: 'id'
-        }
+          key: 'id',
+        },
       },
       idEnemy: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
           model: 'Enemy',
-          key: 'id'
-        }
+          key: 'id',
+        },
       },
       attack: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       life: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       defense: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       idTargetStructure: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: 'Structure',
-          key: 'id'
-        }
+          key: 'id',
+        },
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
-    });
+        type: Sequelize.DATE,
+      },
+    })
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('HordeEnemy');
-  }
-};
+    await queryInterface.dropTable('HordeEnemy')
+  },
+}

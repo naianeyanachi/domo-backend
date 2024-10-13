@@ -15,7 +15,9 @@ router.get('/', async (req: Request, res: Response) => {
     let machineGunTurret = citadel.machineGunTurret
 
     if (!machineGunTurret) {
-      return res.status(404).json({ message: 'Machine gun turret is not built' })
+      return res
+        .status(404)
+        .json({ message: 'Machine gun turret is not built' })
     }
 
     res.json(machineGunTurret)

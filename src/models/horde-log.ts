@@ -12,9 +12,20 @@ export class HordeLog extends Model {
 
   static associate(models: any) {
     HordeLog.belongsTo(models.Horde, { foreignKey: 'idHorde' })
-    HordeLog.belongsTo(models.Structure, { foreignKey: 'idStructure', as: 'structure' })
-    HordeLog.hasOne(models.State, { foreignKey: 'id', sourceKey: 'idStateFrom', as: 'stateFrom' })
-    HordeLog.hasOne(models.State, { foreignKey: 'id', sourceKey: 'idStateTo', as: 'stateTo' })
+    HordeLog.belongsTo(models.Structure, {
+      foreignKey: 'idStructure',
+      as: 'structure',
+    })
+    HordeLog.hasOne(models.State, {
+      foreignKey: 'id',
+      sourceKey: 'idStateFrom',
+      as: 'stateFrom',
+    })
+    HordeLog.hasOne(models.State, {
+      foreignKey: 'id',
+      sourceKey: 'idStateTo',
+      as: 'stateTo',
+    })
   }
 }
 

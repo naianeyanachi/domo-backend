@@ -19,7 +19,9 @@ export class RepairMachineGunTurret extends Model {
       foreignKey: 'id',
       sourceKey: 'idStateTo',
     })
-    RepairMachineGunTurret.belongsTo(models.LevelMachineGunTurret, { foreignKey: 'level' })
+    RepairMachineGunTurret.belongsTo(models.LevelMachineGunTurret, {
+      foreignKey: 'level',
+    })
   }
 }
 
