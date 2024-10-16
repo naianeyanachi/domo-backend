@@ -4,7 +4,9 @@ import { Factory } from './factory'
 import { Player } from './player'
 import { WeatherForecast } from './weather-forecast'
 import { StructureRequirement } from './structure-requirement'
-import { COLLECTOR, FACTORY, WEATHER_FORECAST } from './structure'
+import { StructureType } from './structure'
+import { MachineGunTurret } from './machine-gun-turret'
+import { Horde } from './horde'
 
 class Build {
   public materials!: number
@@ -26,12 +28,17 @@ export class Citadel extends Model {
   public factory?: Factory
   public player?: Player
   public weatherForecast?: WeatherForecast
+  public machineGunTurret?: MachineGunTurret
   public build?: { [key: string]: Build } | null
+  public horde?: Horde | null
 
   toJSON() {
     const values = Object.assign({}, this.get())
     if (this.build) {
       values.build = this.build
+    }
+    if (this.horde) {
+      values.horde = this.horde
     }
     return values
   }
@@ -56,6 +63,11 @@ export class Citadel extends Model {
       sourceKey: 'id',
       foreignKey: 'idCitadel',
       as: 'weatherForecast',
+    })
+    Citadel.hasOne(models.MachineGunTurret, {
+      sourceKey: 'id',
+      foreignKey: 'idCitadel',
+      as: 'machineGunTurret',
     })
   }
 
@@ -101,11 +113,27 @@ export class Citadel extends Model {
             },
           ],
         },
+        {
+          model: db.MachineGunTurret,
+          as: 'machineGunTurret',
+          required: false,
+          include: [
+            { model: db.State, as: 'state' },
+            { model: db.LevelMachineGunTurret, as: 'levelMachineGunTurret' },
+            { model: db.Citadel, as: 'citadel' },
+            {
+              model: db.RepairMachineGunTurret,
+              as: 'repairMachineGunTurret',
+              required: false,
+            },
+          ],
+        },
         { model: db.Player, as: 'player' },
       ],
     })
     if (citadel) {
       citadel!.build = await Citadel.getBuilds(db, citadel)
+      citadel!.horde = await Citadel.getHorde(db, citadel)
     }
     // TODO: add current weather
     return citadel
@@ -148,8 +176,13 @@ export class Citadel extends Model {
       requiredStructuresByStructure
     )) {
       switch (structure) {
-        case WEATHER_FORECAST:
+        case StructureType.WEATHER_FORECAST:
           if (citadel!.weatherForecast) {
+            continue
+          }
+          break
+        case StructureType.MACHINE_GUN_TURRET:
+          if (citadel!.machineGunTurret) {
             continue
           }
           break
@@ -158,12 +191,12 @@ export class Citadel extends Model {
       let canBuild = true
       for (const requiredStructure of requiredStructures) {
         switch (requiredStructure.structure!.structure) {
-          case COLLECTOR:
+          case StructureType.COLLECTOR:
             if (citadel!.collector!.level < requiredStructure!.level) {
               canBuild = false
             }
             break
-          case FACTORY:
+          case StructureType.FACTORY:
             if (citadel!.factory!.level < requiredStructure!.level) {
               canBuild = false
             }
@@ -179,6 +212,26 @@ export class Citadel extends Model {
       }
     }
     return builds
+  }
+
+  static async getHorde(db: any, citadel: Citadel) {
+    const horde = await db.Horde.findOne({
+      where: {
+        idCitadel: citadel.id,
+      },
+      include: [
+        {
+          model: db.HordeEnemy,
+          as: 'enemies',
+          include: [
+            { model: db.Enemy, as: 'enemy' },
+            { model: db.Structure, as: 'targetStructure' },
+          ],
+        },
+      ],
+      order: [['id', 'DESC']],
+    })
+    return horde
   }
 
   async addResources(resources: number) {

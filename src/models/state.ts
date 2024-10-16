@@ -58,6 +58,18 @@ export class State extends Model {
     return (await this.findOne({ where: { state: REINFORCED } })) as State
   }
 
+  static async getWornState(): Promise<State> {
+    return (await this.findOne({ where: { state: WORN } })) as State
+  }
+
+  static async getDamagedState(): Promise<State> {
+    return (await this.findOne({ where: { state: DAMAGED } })) as State
+  }
+
+  static async getDestroyedState(): Promise<State> {
+    return (await this.findOne({ where: { state: DESTROYED } })) as State
+  }
+
   isManufacturing(): boolean {
     return this.state === MANUFACTURING
   }
@@ -68,6 +80,10 @@ export class State extends Model {
 
   isUpgrading(): boolean {
     return this.state === UPGRADING
+  }
+
+  isReinforced(): boolean {
+    return this.state === REINFORCED
   }
 
   canRepair(): boolean {
@@ -86,6 +102,32 @@ export class State extends Model {
 
   canCollect(): boolean {
     return this.state === OK || this.state === REINFORCED
+  }
+
+  async getStateAfterDamage(damage: number): Promise<State> {
+    if (this.state === REINFORCED) {
+      return await State.getOKState()
+    }
+
+    const stateChange = Math.floor(damage / 10)
+    if (stateChange === 0) {
+      return this
+    }
+    let state = this.state
+    for (let i = 0; i < stateChange; i++) {
+      switch (state) {
+        case OK:
+          state = (await State.getWornState()).state
+          break
+        case WORN:
+          state = (await State.getDamagedState()).state
+          break
+        case DAMAGED:
+          state = (await State.getDestroyedState()).state
+          break
+      }
+    }
+    return (await State.findOne({ where: { state: state } })) as State
   }
 }
 

@@ -1,9 +1,12 @@
 'use strict'
 import { Model, DataTypes, Sequelize } from 'sequelize'
 
-export const COLLECTOR = 'Collector'
-export const FACTORY = 'Factory'
-export const WEATHER_FORECAST = 'WeatherForecast'
+export enum StructureType {
+  COLLECTOR = 'Collector',
+  FACTORY = 'Factory',
+  WEATHER_FORECAST = 'WeatherForecast',
+  MACHINE_GUN_TURRET = 'MachineGunTurret',
+}
 
 export class Structure extends Model {
   public id!: number

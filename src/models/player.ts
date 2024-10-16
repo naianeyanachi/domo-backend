@@ -1,10 +1,13 @@
 import { Model, DataTypes, Sequelize, Op } from 'sequelize'
-import { COLLECTOR, FACTORY } from './structure'
+import { StructureType } from './structure'
 import { Citadel } from './citadel'
 import { WeatherRequirement } from './weather-requirement'
 import { WeatherPlayerOption } from './weather-player-options'
-import { NORMAL } from './weather'
+import { WeatherType } from './weather'
 import { WeatherPlayer } from './weather-player'
+import { EnemyType } from './enemy'
+import { HordeEnemy } from './horde-enemy'
+import { State } from './state'
 
 export class Player extends Model {
   public id!: number
@@ -27,6 +30,8 @@ export class Player extends Model {
   async updatePlayer(db: any, citadel: Citadel, date: Date) {
     await this.generateWeatherPlayer(db, date)
     await this.applyWeather(db, citadel, date)
+    await this.generateHorde(db, citadel, date)
+    await this.hordeBattle(db, citadel, date)
     this.lastLogin = date
     await this.save()
   }
@@ -94,7 +99,7 @@ export class Player extends Model {
         ],
       })
     const unlockedNotNormalWeathers = unlockedWeathers.filter(
-      (weather: any) => weather.weather.weather !== NORMAL
+      (weather: any) => weather.weather.weather !== WeatherType.NORMAL
     )
     const weatherChances: { [key: number]: number } =
       unlockedNotNormalWeathers.reduce(
@@ -187,10 +192,10 @@ export class Player extends Model {
       let unlock = false
       for (const requirement of weatherRequirements) {
         switch (requirement.structure.structure) {
-          case COLLECTOR:
+          case StructureType.COLLECTOR:
             unlock = unlock || citadel.collector!.level >= requirement.level
             break
-          case FACTORY:
+          case StructureType.FACTORY:
             unlock = unlock || citadel.factory!.level >= requirement.level
             break
         }
@@ -208,6 +213,185 @@ export class Player extends Model {
   async applyWeather(db: any, citadel: Citadel, date: Date) {
     await citadel.collector!.applyWeather(db, this.id, date)
     await citadel.factory!.applyWeather(db, this.id, date)
+  }
+
+  async generateHorde(db: any, citadel: Citadel, date: Date) {
+    const horde = await db.Horde.findOne({
+      where: {
+        idCitadel: citadel.id,
+      },
+      order: [['datetime', 'DESC']],
+    })
+    const lastHordeDate = horde?.datetime
+    if (lastHordeDate && lastHordeDate > date) {
+      return
+    }
+
+    const random = Math.random() * 10
+    const nextHordeDate = new Date(
+      date.getTime() + 10 * 60 * 60 * 1000 + random * 60 * 60 * 1000
+    )
+    const newHorde = await db.Horde.create({
+      idCitadel: citadel.id,
+      datetime: nextHordeDate,
+    })
+    const numCitadel = await db.Citadel.count({
+      where: {
+        idPlayer: this.id,
+      },
+    })
+
+    const enemyTypes = []
+    if (citadel.machineGunTurret) {
+      enemyTypes.push(EnemyType.TERRESTRIAL)
+    }
+    // TODO: check for other types of enemies
+
+    const enemies = await db.Enemy.findAll({
+      where: {
+        type: {
+          [Op.in]: enemyTypes,
+        },
+      },
+    })
+
+    const structures = await db.Structure.findAll()
+    const targetableStructures = []
+    for (const structure of structures) {
+      switch (structure.structure) {
+        case StructureType.COLLECTOR:
+          if (citadel.collector) {
+            targetableStructures.push(structure.id)
+          }
+          break
+        case StructureType.FACTORY:
+          if (citadel.factory) {
+            targetableStructures.push(structure.id)
+          }
+          break
+        case StructureType.WEATHER_FORECAST:
+          if (citadel.weatherForecast) {
+            targetableStructures.push(structure.id)
+          }
+          break
+        case StructureType.MACHINE_GUN_TURRET:
+          if (citadel.machineGunTurret) {
+            targetableStructures.push(structure.id)
+          }
+          break
+      }
+    }
+
+    const numHordeEnemies = Math.floor(Math.random() * 2 * numCitadel)
+    for (let i = 0; i < numHordeEnemies; i++) {
+      const enemy = enemies[Math.floor(Math.random() * enemies.length)]
+      const attack =
+        Math.floor(Math.random() * (enemy.attackHigh - enemy.attackLow)) +
+        enemy.attackLow
+      const life =
+        Math.floor(Math.random() * (enemy.lifeHigh - enemy.lifeLow)) +
+        enemy.lifeLow
+      const defense =
+        Math.floor(Math.random() * (enemy.defenseHigh - enemy.defenseLow)) +
+        enemy.defenseLow
+      const targetStructure =
+        targetableStructures[
+          Math.floor(Math.random() * targetableStructures.length)
+        ]
+      await db.HordeEnemy.create({
+        idHorde: newHorde.id,
+        idEnemy: enemy.id,
+        attack: attack,
+        life: life,
+        defense: defense,
+        idTargetStructure: targetStructure,
+      })
+    }
+  }
+
+  async hordeBattle(db: any, citadel: Citadel, date: Date) {
+    if (!citadel.horde) {
+      return
+    }
+    if (citadel.horde!.datetime > date) {
+      return
+    }
+    if (citadel.horde!.logs && citadel.horde!.logs!.length !== 0) {
+      return
+    }
+
+    let totalAttack: { [key: string]: number } = {}
+    for (const enemyType of Object.values(EnemyType)) {
+      totalAttack[enemyType] = 0
+    }
+
+    if (citadel.machineGunTurret) {
+      totalAttack[EnemyType.TERRESTRIAL] +=
+        citadel.machineGunTurret.levelMachineGunTurret!.attack
+    }
+    // TODO: check for other defenses
+
+    for (const enemy of citadel.horde!.enemies!) {
+      const enemyTrueLife = enemy.life + enemy.defense
+      if (totalAttack[enemy.enemy!.type] < enemy.defense) {
+        continue
+      } else if (totalAttack[enemy.enemy!.type] > enemyTrueLife) {
+        totalAttack[enemy.enemy!.type] -= enemyTrueLife
+        enemy.life = 0
+        enemy.attack = 0
+      } else {
+        const enemyLifeAfterAttack =
+          enemyTrueLife - totalAttack[enemy.enemy!.type]
+        enemy.attack = Math.floor(
+          enemy.attack * (enemyLifeAfterAttack / enemy.life)
+        )
+        enemy.life = enemyLifeAfterAttack
+      }
+      enemy.save()
+    }
+
+    const enemiesAlive = citadel.horde!.enemies!.filter(
+      (enemy: HordeEnemy) => enemy.life > 0
+    )
+
+    for (const enemy of enemiesAlive) {
+      let damage = enemy.attack
+      let newState: State
+      let oldState: State
+
+      switch (enemy.targetStructure!.structure) {
+        case StructureType.MACHINE_GUN_TURRET:
+          damage -= citadel.machineGunTurret!.levelMachineGunTurret!.defense
+          if (damage < 0) {
+            damage = 0
+          }
+          oldState = citadel.machineGunTurret!.state!
+          newState =
+            await citadel.machineGunTurret!.state!.getStateAfterDamage(damage)!
+          break
+        case StructureType.COLLECTOR:
+          oldState = citadel.collector!.state!
+          newState =
+            await citadel.collector!.state!.getStateAfterDamage(damage)!
+          break
+        case StructureType.FACTORY:
+          oldState = citadel.factory!.state!
+          newState = await citadel.factory!.state!.getStateAfterDamage(damage)!
+          break
+        case StructureType.WEATHER_FORECAST:
+          oldState = citadel.weatherForecast!.state!
+          newState =
+            await citadel.weatherForecast!.state!.getStateAfterDamage(damage)!
+          break
+      }
+
+      db.HordeLog.create({
+        idHorde: citadel.horde!.id,
+        idStructure: enemy.targetStructure!.id,
+        idStateFrom: oldState!.id,
+        idStateTo: newState!.id,
+      })
+    }
   }
 }
 

@@ -1,6 +1,7 @@
 import express, { Router, Request, Response } from 'express'
 import db from '../../models'
 import { isValidEmail } from '../../utils/email'
+import horde from './horde'
 
 const router: Router = express.Router()
 
@@ -26,6 +27,8 @@ router.get('/:id', async (req: Request, res: Response) => {
       .json({ message: 'Failed to fetch player', error: 'An error occurred' })
   }
 })
+
+router.use('/:id/horde', horde)
 
 router.post('/', async (req: Request, res: Response) => {
   try {

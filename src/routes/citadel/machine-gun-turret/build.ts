@@ -11,14 +11,14 @@ export const build = async (req: Request, res: Response) => {
 
     await citadel.updateCitadel(db)
 
-    if (!citadel.build[StructureType.WEATHER_FORECAST]) {
+    if (!citadel.build[StructureType.MACHINE_GUN_TURRET]) {
       return res
         .status(400)
-        .json({ message: 'Weather forecast cannot be built' })
+        .json({ message: 'Machine gun turret cannot be built' })
     }
 
     const idleState = await db.State.getOKState()
-    await db.WeatherForecast.create({
+    await db.MachineGunTurret.create({
       idCitadel: citadel.id,
       level: 1,
       idState: idleState.id,
@@ -27,15 +27,15 @@ export const build = async (req: Request, res: Response) => {
     const updatedCitadel = await db.Citadel.getCitadel(db, req.params.id)
     return res.json(updatedCitadel)
   } catch (error: unknown) {
-    console.error('Error building weather forecast:', error)
+    console.error('Error building machine gun turret:', error)
     if (error instanceof Error) {
       res.status(400).json({
-        message: 'Failed to build weather forecast',
+        message: 'Failed to build machine gun turret',
         error: error.message,
       })
     } else {
       res.status(400).json({
-        message: 'Failed to build weather forecast',
+        message: 'Failed to build machine gun turret',
         error: 'An unknown error occurred',
       })
     }

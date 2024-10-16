@@ -2,10 +2,12 @@
 import { Model, DataTypes, Sequelize } from 'sequelize'
 import { State } from './state'
 
-export const NORMAL = 'NORMAL'
-export const BLIZZARD = 'BLIZZARD'
-export const CORROSIVE_RAIN = 'CORROSIVE_RAIN'
-export const METEOR_SHOWER = 'METEOR_SHOWER'
+export enum WeatherType {
+  NORMAL = 'NORMAL',
+  BLIZZARD = 'BLIZZARD',
+  CORROSIVE_RAIN = 'CORROSIVE_RAIN',
+  METEOR_SHOWER = 'METEOR_SHOWER',
+}
 
 export class Weather extends Model {
   public id!: number

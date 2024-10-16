@@ -1,12 +1,16 @@
 'use strict'
 import { Model, DataTypes, Sequelize } from 'sequelize'
 import { LevelWeatherForecast } from './level-weather-forecast'
+import { State } from './state'
+import { RepairWeatherForecast } from './repair-weather-forecast'
 
 export class WeatherForecast extends Model {
   public idCitadel!: number
   public level!: number
   public idState!: number
   public levelWeatherForecast?: LevelWeatherForecast
+  public repairWeatherForecast?: RepairWeatherForecast
+  public state?: State
 
   static associate(models: any) {
     WeatherForecast.belongsTo(models.Citadel, {
