@@ -300,7 +300,7 @@ export class Player extends Model {
         enemy.defenseLow
       const targetStructure =
         targetableStructures[
-        Math.floor(Math.random() * targetableStructures.length)
+          Math.floor(Math.random() * targetableStructures.length)
         ]
       await db.HordeEnemy.create({
         idHorde: newHorde.id,
