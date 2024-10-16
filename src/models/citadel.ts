@@ -201,6 +201,25 @@ export class Citadel extends Model {
               canBuild = false
             }
             break
+          case StructureType.WEATHER_FORECAST:
+            if (
+              !citadel!.weatherForecast ||
+              (citadel!.weatherForecast &&
+                citadel!.weatherForecast.level < requiredStructure!.level)
+            ) {
+              canBuild = false
+            }
+            break
+          case StructureType.MACHINE_GUN_TURRET:
+            if (
+              !citadel!.machineGunTurret ||
+              (citadel!.machineGunTurret &&
+                citadel!.machineGunTurret.level < requiredStructure!.level)
+            ) {
+              canBuild = false
+            }
+            break
+          // TODO: add other structures
         }
       }
 
