@@ -247,6 +247,10 @@ export class Player extends Model {
     }
     // TODO: check for other types of enemies
 
+    if (enemyTypes.length === 0) {
+      return
+    }
+
     const enemies = await db.Enemy.findAll({
       where: {
         type: {
@@ -282,7 +286,7 @@ export class Player extends Model {
       }
     }
 
-    const numHordeEnemies = Math.floor(Math.random() * 2 * numCitadel)
+    const numHordeEnemies = Math.floor(Math.random() * 2 * numCitadel) + 1
     for (let i = 0; i < numHordeEnemies; i++) {
       const enemy = enemies[Math.floor(Math.random() * enemies.length)]
       const attack =
